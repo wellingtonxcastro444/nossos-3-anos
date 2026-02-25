@@ -5,248 +5,443 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3 Anos com Você</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&family=Dancing+Script:wght@600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         /* --- RESET E BASES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: #Fdfbf7; color: #2C3E50; line-height: 1.6; overflow-x: hidden; overflow-y: hidden; }
-        
+        body { font-family: 'Inter', sans-serif; background-color: #Fdfbf7; color: #2C3E50; line-height: 1.6; overflow-x: hidden; overflow-y: hidden; scroll-behavior: smooth; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; color: #1a1a1a; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #Fdfbf7; }
+        ::-webkit-scrollbar-thumb { background: #d1bfae; border-radius: 10px; }
+
         /* --- 1. TELA DE SENHA --- */
         #password-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #1a1a1a; z-index: 200000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #111; z-index: 200000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; color: #F9F7F3;
+            transition: opacity 0.5s ease;
         }
         .pass-content { 
-            background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 20px; text-align: center; 
-            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); max-width: 400px; width: 100%;
+            background: rgba(255, 255, 255, 0.03); padding: 50px 40px; border-radius: 16px; text-align: center; 
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); max-width: 400px; width: 100%;
         }
-        .pass-input { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 10px; border: none; text-align: center; font-size: 1.1rem; }
-        .pass-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; background: #A67B5B; color: white; font-weight: bold; cursor: pointer; }
+        .pass-content h2 { font-family: 'Playfair Display', serif; color: #fff; margin-bottom: 20px; font-size: 1.8rem; font-weight: 400;}
+        .pass-input { 
+            width: 100%; padding: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 8px; text-align: center; font-size: 1rem; outline: none; background: transparent; color: white; transition: all 0.3s ease; letter-spacing: 2px;
+        }
+        .pass-input:focus { border-color: #A67B5B; background: rgba(255,255,255,0.05); }
+        .pass-btn { 
+            width: 100%; padding: 15px; border: none; border-radius: 8px; background: #A67B5B; 
+            color: white; font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.3s ease; 
+        }
+        .pass-btn:hover { background: #8D6E63; }
+        #pass-error { color: #e74c3c; margin-top: 15px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s ease; }
 
-        /* --- 2. O FEITIÇO DA VARINHA (REVELIO) --- */
-        #wand-container {
+        /* --- 2. A VARINHA (REVELIO) PROFISSIONAL --- */
+        #magic-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 150000;
-            display: none; justify-content: center; align-items: center; pointer-events: none;
+            display: none; justify-content: center; align-items: center; overflow: hidden;
         }
-        .wand {
-            width: 200px; transform: rotate(-45deg);
-            filter: drop-shadow(0 0 10px #fff);
-            animation: wandMagic 2s forwards;
+        .wand-container {
+            position: absolute; width: 200px; height: 20px;
+            transform: translate(50vw, 50vh) rotate(-30deg) scale(0);
+            transform-origin: left center;
+            opacity: 0;
         }
-        @keyframes wandMagic {
-            0% { transform: rotate(-45deg) translate(-100px, 100px); opacity: 0; }
-            50% { transform: rotate(-20deg) translate(0, 0); opacity: 1; }
-            80% { transform: rotate(-10deg) scale(1.2); filter: drop-shadow(0 0 30px #fff); }
-            100% { transform: rotate(-10deg) scale(1); opacity: 0; }
+        /* A Varinha em si desenhada em CSS/SVG */
+        .wand-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+        
+        /* Animação da varinha: surge, faz um feitiço e aponta */
+        .spell-cast {
+            animation: wandMovement 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
+        @keyframes wandMovement {
+            0% { transform: translate(30vw, 80vh) rotate(-60deg) scale(0.5); opacity: 0; }
+            30% { transform: translate(0, -20vh) rotate(-10deg) scale(1); opacity: 1; }
+            60% { transform: translate(20vw, 0) rotate(-40deg) scale(1.1); opacity: 1; }
+            80% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 1; }
+            100% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 0; }
+        }
+
         .magic-flash {
-            position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%;
-            box-shadow: 0 0 100px 50px white; opacity: 0;
-            animation: flashAnim 0.8s 1.5s forwards;
+            position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 50px 20px #fff; opacity: 0; transform: translate(-50%, -50%); pointer-events: none;
         }
-        @keyframes flashAnim {
-            0% { transform: scale(1); opacity: 0; }
-            50% { transform: scale(50); opacity: 1; }
-            100% { transform: scale(100); opacity: 0; }
+        .flash-active { animation: blindingFlash 1.5s forwards; }
+        @keyframes blindingFlash {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(200); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(300); opacity: 0; }
         }
 
         /* --- 3. TELA DE ENTRADA (CINEMA) --- */
         #entrance-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0a0a0a; z-index: 100000;
-            display: none; flex-direction: column; justify-content: center; align-items: center; transition: 1.5s opacity;
+            display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 2s ease;
         }
-        .pulse-btn { background: none; border: none; font-size: 5rem; cursor: pointer; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        .entrance-text { color: #e0e0e0; font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 40px; letter-spacing: 3px; font-style: italic;}
+        .pulse-btn { background: none; border: none; font-size: 4.5rem; cursor: pointer; animation: pulseHeart 2s infinite ease-in-out; outline: none; -webkit-tap-highlight-color: transparent; }
+        @keyframes pulseHeart { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(231, 76, 60, 0.2)); } 50% { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(231, 76, 60, 0.6)); } }
 
-        /* --- EFEITOS GERAIS --- */
-        .reveal { opacity: 0; transform: translateY(50px); transition: 1s all; }
+        /* --- REVEAL E CORAÇÕES --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        .hearts-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
-        .heart { position: absolute; color: #e74c3c; animation: fall linear forwards; }
-        @keyframes fall { 0% { transform: translateY(-10vh); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
+        .hearts-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
+        .heart { position: absolute; color: #e74c3c; opacity: 0.4; animation: fall linear forwards; filter: blur(1px); }
+        @keyframes fall { 0% { transform: translateY(-10vh) scale(1) rotate(0deg); opacity: 0; } 20% { opacity: 0.5; } 100% { transform: translateY(110vh) scale(1.2) rotate(45deg); opacity: 0; } }
 
-        /* --- LAYOUT --- */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; position: relative; overflow: hidden; }
-        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('fotocapa.jpeg') center/cover; z-index: -1; }
-        .hero h1 { font-size: 4rem; text-shadow: 2px 2px 20px #000; }
-
-        /* CONTADOR */
-        .time-block { background: #fff; padding: 20px; border-radius: 20px; min-width: 120px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
-        .time-block span { display: block; font-size: 2.5rem; font-weight: bold; font-family: 'Playfair Display'; }
-
-        /* ENVELOPE E CARTA */
-        .story-container { padding: 100px 20px; display: flex; flex-direction: column; align-items: center; }
-        .envelope-wrapper { position: relative; width: 100%; max-width: 500px; height: 300px; cursor: pointer; perspective: 1000px; animation: float 3s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        /* --- CAPA E CONTADOR --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px; position: relative; overflow: hidden; }
+        .hero-bg { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; background: linear-gradient(rgba(20, 20, 20, 0.5), rgba(20, 20, 20, 0.8)), url('fotocapa.jpeg') center/cover no-repeat; z-index: -1; animation: subtleZoom 25s infinite alternate ease-in-out; }
+        @keyframes subtleZoom { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+        .hero h1 { font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 10px; text-shadow: 0 4px 20px rgba(0,0,0,0.6); color: #ffffff; letter-spacing: -1px; font-weight: 400;}
+        .hero p { font-size: clamp(1rem, 2vw, 1.2rem); letter-spacing: 5px; text-transform: uppercase; font-weight: 300; opacity: 0.8;}
         
-        .envelope { position: absolute; width: 100%; height: 100%; background: #d1bfae; border-radius: 8px; z-index: 2; transition: 0.8s; }
-        .envelope-flap { position: absolute; top: 0; width: 100%; height: 50%; background: #c4b09d; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: 0.8s; z-index: 5; }
-        .letter-content { 
-            position: absolute; top: 10%; left: 5%; width: 90%; background: #faf6f0; padding: 30px; 
-            font-family: 'Caveat', cursive; font-size: 1.6rem; opacity: 0; transition: 1s; z-index: 1; border: 1px solid #eadecf;
-            max-height: 400px; overflow-y: auto;
+        .highlight-section { padding: 80px 20px 40px 20px; display: flex; justify-content: center; }
+        .polaroid-big { background: #ffffff; padding: 15px 15px 25px 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-radius: 4px; max-width: 400px; width: 100%; transform: rotate(-2deg); transition: transform 0.6s ease; z-index: 2; }
+        .polaroid-big:hover { transform: rotate(0deg) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.12); z-index: 10; }
+        .polaroid-big img { width: 100%; height: auto; border-radius: 2px; display: block; }
+        .polaroid-text-big { text-align: center; font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #2C3E50; margin-top: 15px; line-height: 1.2; }
+        
+        .counter-section { padding: 40px 20px 80px 20px; text-align: center; }
+        .counter-section h2 { font-size: 2rem; margin-bottom: 40px; color: #8D6E63; font-weight: 400;}
+        .counter-box { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; }
+        .time-block { background: #ffffff; padding: 25px 20px; border-radius: 12px; min-width: 110px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); transition: transform 0.4s ease; }
+        .time-block:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(166, 123, 91, 0.1); }
+        .time-block span { display: block; font-size: 2.8rem; font-weight: 600; font-family: 'Playfair Display', serif; color: #2C3E50; line-height: 1; margin-bottom: 5px;}
+        .time-block p { margin: 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #A67B5B; }
+
+        /* --- 3. O ENVELOPE E A CARTA TIPO MÁQUINA DE ESCREVER --- */
+        .story-container { padding: 60px 20px 150px 20px; display: flex; flex-direction: column; align-items: center; }
+        .story-container h2 { font-size: 2.5rem; margin-bottom: 5px; color: #8D6E63; font-weight: 400;}
+        .story-container > p { color: #95a5a6; margin-bottom: 40px; font-style: italic; font-size: 1rem; }
+        
+        .envelope-wrapper { position: relative; width: 100%; max-width: 600px; height: 350px; margin-top: 20px; perspective: 1000px; cursor: pointer; transition: transform 0.3s ease; }
+        .envelope-wrapper:hover { transform: scale(1.02); }
+        
+        .envelope { position: absolute; width: 100%; height: 100%; background: #d4c4b7; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; z-index: 2; transition: all 0.8s ease; }
+        .envelope-flap { position: absolute; top: 0; left: 0; width: 100%; height: 55%; background: #c5b3a3; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform 0.8s ease 0.1s; z-index: 5; }
+        .envelope-seal { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); font-size: 3.5rem; z-index: 6; transition: opacity 0.4s ease 0.1s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+        .envelope-front { position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: #dfd1c6; clip-path: polygon(0 0, 50% 35%, 100% 0, 100% 100%, 0 100%); z-index: 4; }
+        .envelope-to { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #5D4037; z-index: 7; }
+
+        /* Carta */
+        .letter-content {
+            position: absolute; top: 30%; left: 5%; width: 90%; background-color: #fcfaf8;
+            padding: 40px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-radius: 4px;
+            z-index: 1; transition: transform 1s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.8s ease; transform: translateY(0); opacity: 0;
+            font-family: 'Caveat', cursive; font-size: 1.6rem; color: #4a403a; line-height: 1.5; border: 1px solid #f0e9e1; 
+            max-height: 80vh; overflow-y: auto; white-space: pre-wrap; /* Permite usar \n no JS para quebrar linha */
         }
+        .letter-content::-webkit-scrollbar { width: 6px; }
+        .letter-content::-webkit-scrollbar-thumb { background: rgba(166, 123, 91, 0.5); border-radius: 10px; }
 
-        .envelope-wrapper.is-open .envelope-flap { transform: rotateX(180deg); }
-        .envelope-wrapper.is-open .letter-content { transform: translateY(-100%); opacity: 1; z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        /* Cursor piscando para a máquina de escrever */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            color: #A67B5B;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
 
-        /* VARAL */
-        .varal-container { display: flex; overflow-x: auto; padding: 40px; gap: 30px; }
-        .polaroid-hanging { background: #fff; padding: 10px 10px 20px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex: 0 0 auto; width: 250px; }
-        .polaroid-hanging img { width: 100%; height: 220px; object-fit: cover; }
-        .polaroid-caption { font-family: 'Dancing Script'; text-align: center; margin-top: 10px; font-size: 1.5rem; }
+        .envelope-wrapper.is-open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope-wrapper.is-open .envelope-seal { opacity: 0; }
+        .envelope-wrapper.is-open .letter-content { transform: translateY(-65%); opacity: 1; z-index: 10; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
 
-        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .time-block { min-width: 80px; } }
+        /* --- VARAL DE FOTOS (SCROLL HORIZONTAL) --- */
+        .gallery-section { padding: 60px 0 100px 0; position: relative; overflow: hidden; }
+        .gallery-section::before { content: ''; position: absolute; top: 120px; left: -5%; width: 110%; height: 2px; background: repeating-linear-gradient(45deg, #A1887F, #A1887F 5px, #8D6E63 5px, #8D6E63 10px); opacity: 0.6; z-index: 1; transform: rotate(-1deg); }
+        .scroll-hint { text-align: center; color: #bcaaa4; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+        
+        .varal-container { display: flex; overflow-x: auto; padding: 20px 40px 60px 40px; gap: 40px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .varal-container::-webkit-scrollbar { display: none; } 
+        
+        .polaroid-hanging { background: #ffffff; padding: 10px 10px 20px 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-radius: 2px; flex: 0 0 auto; width: 260px; position: relative; margin-top: 50px; z-index: 2; transition: transform 0.4s; animation: gentleSwing 5s infinite alternate ease-in-out; }
+        .polaroid-hanging::before { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 10px; height: 35px; background: #D7CCC8; border-right: 1px solid #A1887F; border-radius: 2px; box-shadow: 2px 2px 4px rgba(0,0,0,0.1); z-index: 3; }
+        
+        @keyframes gentleSwing { 0% { transform: rotate(-1.5deg); } 100% { transform: rotate(1.5deg); } }
+        .polaroid-hanging:nth-child(odd) { animation-duration: 4s; }
+        .polaroid-hanging:nth-child(even) { animation-duration: 6s; animation-direction: alternate-reverse;}
+        
+        .polaroid-hanging:hover { transform: scale(1.05) rotate(0deg) !important; box-shadow: 0 25px 45px rgba(0,0,0,0.12); z-index: 10; animation-play-state: paused; }
+        .polaroid-hanging img { width: 100%; height: 240px; object-fit: cover; border-radius: 2px; display: block; filter: brightness(0.98); transition: filter 0.3s; }
+        .polaroid-hanging:hover img { filter: brightness(1.02); }
+        .polaroid-caption { text-align: center; font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #4a403a; margin-top: 12px; }
+
+        /* --- MÚSICA E RODAPÉ --- */
+        .music-section { text-align: center; padding: 60px 20px 80px 20px; background-color: #ffffff; }
+        .music-section h2 { margin-bottom: 10px; font-size: 2rem; color: #8D6E63; font-weight: 400;}
+        .music-wrapper { max-width: 600px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.06); margin-top: 30px;}
+        .music-section iframe { display: block; }
+        footer { text-align: center; padding: 40px 20px; background-color: #111; color: #f1f1f1; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3.2rem; }
+            .time-block { min-width: 80px; padding: 15px 10px;}
+            .time-block span { font-size: 1.8rem; }
+            .polaroid-big { max-width: 90%; }
+            .envelope-wrapper { height: 260px; } 
+            .letter-content { font-size: 1.4rem; padding: 25px 20px; }
+            .envelope-wrapper.is-open .letter-content { transform: translateY(-75%); }
+            .polaroid-hanging { width: 220px; padding: 8px 8px 15px 8px;} 
+            .polaroid-hanging img { height: 200px; }
+            .pass-content { padding: 40px 25px;}
+        }
     </style>
 </head>
 <body>
 
     <div id="password-screen">
         <div class="pass-content">
-            <h2 style="color:white">🔒 Qual o nosso segredo?</h2>
-            <input type="text" id="pass-input" class="pass-input" placeholder="Digite a senha...">
-            <button id="pass-btn" class="pass-btn">REVELIO</button>
-            <p id="pass-error" style="color:red; display:none; margin-top:10px">Tente novamente, bruxinha!</p>
+            <h2>Nosso Segredo</h2>
+            <p style="margin-bottom: 25px; opacity: 0.7; font-size: 0.9rem;">Insira a palavra-chave mágica</p>
+            <input type="text" id="pass-input" class="pass-input" placeholder="Senha..." autocomplete="off">
+            <button id="pass-btn" class="pass-btn">Revelar</button>
+            <p id="pass-error">Feitiço incorreto. Tente novamente.</p>
         </div>
     </div>
 
-    <div id="wand-container">
-        <svg class="wand" viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 5 L90 3 L100 5 L90 7 Z" fill="#4e342e"/>
-            <circle cx="98" cy="5" r="2" fill="#fff"/>
-        </svg>
-        <div class="magic-flash"></div>
+    <div id="magic-screen">
+        <div class="wand-container" id="wand-anim">
+            <svg class="wand-svg" viewBox="0 0 200 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20,10 L195,8 L195,12 Z" fill="#3e2723"/>
+                <path d="M0,6 L25,6 L25,14 L0,14 Z" fill="#1b0000"/>
+                <circle cx="195" cy="10" r="3" fill="#ffffff" filter="drop-shadow(0 0 5px #fff)"/>
+            </svg>
+        </div>
+        <div class="magic-flash" id="magic-flash"></div>
     </div>
 
     <div id="entrance-screen">
-        <p style="color:white; font-family:'Playfair Display'; font-size: 1.5rem; margin-bottom: 20px">Feitiço aceito...</p>
-        <button class="pulse-btn" id="start-btn">❤️</button>
+        <p class="entrance-text">Nossa história aguarda.</p>
+        <button class="pulse-btn" id="start-btn">🤍</button>
+        <p style="color: #666; font-size: 0.8rem; margin-top: 20px; letter-spacing: 2px; text-transform: uppercase;">Toque para entrar</p>
     </div>
 
     <div class="hearts-container" id="hearts-container"></div>
 
     <section class="hero">
         <div class="hero-bg"></div>
-        <h1>3 Anos de Nós</h1>
-        <p>A melhor decisão da minha vida</p>
+        <div class="hero-content reveal">
+            <h1>3 Anos de Nós</h1>
+            <p>A melhor decisão que já tomei</p>
+        </div>
+    </section>
+
+    <section class="highlight-section reveal">
+        <div class="polaroid-big">
+            <img src="foto2.jpeg" alt="Nossa primeira foto juntos">
+            <div class="polaroid-text-big">Nossa primeira foto juntos</div>
+        </div>
     </section>
 
     <section class="counter-section reveal">
-        <h2 style="text-align:center; margin-bottom:30px">Nosso Tempo Juntos</h2>
-        <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap">
+        <h2>Nosso Tempo Juntos</h2>
+        <div class="counter-box" id="counter">
             <div class="time-block"><span id="days">0</span><p>Dias</p></div>
             <div class="time-block"><span id="hours">0</span><p>Horas</p></div>
             <div class="time-block"><span id="minutes">0</span><p>Minutos</p></div>
+            <div class="time-block"><span id="seconds">0</span><p>Segundos</p></div>
         </div>
     </section>
 
     <section class="story-container reveal">
-        <h2 style="margin-bottom:20px; color:#A67B5B">Uma Carta Mágica</h2>
+        <h2>Uma Carta para Você</h2>
+        <p>(Toque no envelope para ler)</p>
+        
         <div class="envelope-wrapper" id="envelope-trigger">
             <div class="envelope">
                 <div class="envelope-flap"></div>
-                <p style="position:absolute; bottom:20px; width:100%; text-align:center; font-family:'Dancing Script'; font-size:1.5rem">Para: Flávia</p>
+                <div class="envelope-seal">💌</div>
+                <div class="envelope-front"></div>
+                <div class="envelope-to">Para: Flávia</div>
             </div>
-            <div class="letter-content" id="typewriter-text">
-                </div>
+
+            <div class="letter-content typing-cursor" id="typewriter-text"></div>
         </div>
     </section>
 
     <section class="gallery-section reveal">
-        <h2 style="text-align:center">Nossas Memórias</h2>
-        <div class="varal-container">
+        <h2 style="text-align: center; color: #8D6E63; margin-bottom: 5px; font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 400;">Coleção de Memórias</h2>
+        <p class="scroll-hint">Deslize ➔</p>
+        <div class="varal-container" id="varal">
             <div class="polaroid-hanging"><img src="foto1.jpeg"><div class="polaroid-caption">Lembranças</div></div>
-            <div class="polaroid-hanging"><img src="foto4.jpeg"><div class="polaroid-caption">Meu amor</div></div>
-            <div class="polaroid-hanging"><img src="foto5.jpeg"><div class="polaroid-caption">Para sempre</div></div>
+            <div class="polaroid-hanging"><img src="foto4.jpeg"><div class="polaroid-caption">Amo você</div></div>
+            <div class="polaroid-hanging"><img src="foto5.jpeg"><div class="polaroid-caption">Nosso dia</div></div>
+            <div class="polaroid-hanging"><img src="foto6.jpeg"><div class="polaroid-caption">Sempre juntos</div></div>
+            <div class="polaroid-hanging"><img src="foto7.jpeg"><div class="polaroid-caption">Meu amor</div></div>
+            <div class="polaroid-hanging"><img src="foto8.jpeg"><div class="polaroid-caption">Nossas aventuras</div></div>
+            <div class="polaroid-hanging"><img src="foto9.jpeg"><div class="polaroid-caption">Perfeitos</div></div>
+            <div class="polaroid-hanging"><img src="foto10.jpeg"><div class="polaroid-caption">Momentos únicos</div></div>
+            <div class="polaroid-hanging"><img src="foto11.jpeg"><div class="polaroid-caption">Sintonia</div></div>
+            <div class="polaroid-hanging"><img src="foto12.jpeg"><div class="polaroid-caption">Nós dois</div></div>
+            <div class="polaroid-hanging"><img src="foto13.jpeg"><div class="polaroid-caption">Sorrisos</div></div>
+            <div class="polaroid-hanging"><img src="foto14.jpeg"><div class="polaroid-caption">Meu porto seguro</div></div>
+            <div class="polaroid-hanging"><img src="foto15.jpeg"><div class="polaroid-caption">Cumplicidade</div></div>
+            <div class="polaroid-hanging"><img src="foto16.jpeg"><div class="polaroid-caption">Completos</div></div>
+            <div class="polaroid-hanging"><img src="foto17.jpeg"><div class="polaroid-caption">Para sempre</div></div>
+            <div class="polaroid-hanging"><img src="foto18.jpeg"><div class="polaroid-caption">Meu dengo</div></div>
+            <div class="polaroid-hanging"><img src="foto19.jpeg"><div class="polaroid-caption">Alegria</div></div>
+            <div class="polaroid-hanging"><img src="foto20.jpeg"><div class="polaroid-caption">Nosso mundo</div></div>
+            <div class="polaroid-hanging"><img src="foto21.jpeg"><div class="polaroid-caption">Sempre nós</div></div>
             <div class="polaroid-hanging"><img src="foto22.jpeg"><div class="polaroid-caption">Tudo pra mim</div></div>
         </div>
     </section>
 
-    <section class="music-section reveal" style="text-align:center; padding: 50px">
-        <iframe src="https://open.spotify.com/embed/track/SUA_TRACK_AQUI" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <section class="music-section reveal">
+        <h2>Nossa Trilha Sonora</h2>
+        <div class="music-wrapper">
+            <iframe id="spotify-player" src="https://open.spotify.com/embed/track/6lXDOj7eP2b6PjE04A2p8O?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
     </section>
 
+    <footer style="padding-bottom: 80px;">
+        <p>Com todo o meu amor, para sempre.</p>
+        <p>27 de Fevereiro de 2026</p>
+    </footer>
+
     <script>
+        // --- 1. LÓGICA DA SENHA E VARINHA (REVELIO) ---
+        const passBtn = document.getElementById('pass-btn');
+        const passInput = document.getElementById('pass-input');
+        const passError = document.getElementById('pass-error');
+        const passwordScreen = document.getElementById('password-screen');
+        const magicScreen = document.getElementById('magic-screen');
+        const wandAnim = document.getElementById('wand-anim');
+        const magicFlash = document.getElementById('magic-flash');
+        const entranceScreen = document.getElementById('entrance-screen');
         const correctPass = "catitel";
-        const letterText = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos. Nesses 1.096 dias, vivemos o extraordinário. Você é meu porto seguro, a pessoa que pedi a Deus.\n\nJuntos construímos nossa família com Safira e Bela, e o futuro reserva ainda mais. Quero você para sempre, em cada vida que existir.\n\nHoje te amo mais que ontem, e amanhã te amarei mais que hoje.\n\nCom amor, Wellington.";
 
-        // --- SENHA E VARINHA ---
-        document.getElementById('pass-btn').onclick = function() {
-            const val = document.getElementById('pass-input').value.toLowerCase();
-            if(val === correctPass) {
-                confetti(); // Explosão de confetes
-                document.getElementById('password-screen').style.display = 'none';
-                const wand = document.getElementById('wand-container');
-                wand.style.display = 'flex';
-                
+        passBtn.addEventListener('click', checkPassword);
+        passInput.addEventListener('keypress', function(e) { if(e.key === 'Enter') checkPassword(); });
+
+        function checkPassword() {
+            if (passInput.value.toLowerCase().trim() === correctPass) {
+                // Esconde a tela de senha e mostra a tela preta da mágica
+                passwordScreen.style.opacity = '0';
                 setTimeout(() => {
-                    wand.style.display = 'none';
-                    document.getElementById('entrance-screen').style.display = 'flex';
-                }, 2500);
+                    passwordScreen.style.display = 'none';
+                    magicScreen.style.display = 'flex';
+                    
+                    // Inicia a animação da varinha
+                    wandAnim.classList.add('spell-cast');
+                    
+                    // Depois de 1.5s (quando a varinha para), dispara o flash
+                    setTimeout(() => {
+                        magicFlash.classList.add('flash-active');
+                    }, 1500);
+
+                    // Quando o flash cobre a tela toda (em ~2.5s total), muda para o Cinema
+                    setTimeout(() => {
+                        magicScreen.style.display = 'none';
+                        entranceScreen.style.display = 'flex';
+                    }, 2500);
+
+                }, 500);
             } else {
-                document.getElementById('pass-error').style.display = 'block';
+                passError.style.opacity = '1';
+                passInput.value = '';
+                setTimeout(() => { passError.style.opacity = '0'; }, 3000);
             }
-        };
-
-        // --- INÍCIO DO SITE ---
-        document.getElementById('start-btn').onclick = function() {
-            document.getElementById('entrance-screen').style.display = 'none';
-            document.body.style.overflowY = 'auto';
-            reveal();
-        };
-
-        // --- ENVELOPE E MÁQUINA DE ESCREVER ---
-        let hasTyped = false;
-        document.getElementById('envelope-trigger').onclick = function() {
-            this.classList.toggle('is-open');
-            if(!hasTyped) {
-                typeWriter();
-                hasTyped = true;
-            }
-        };
-
-        function typeWriter() {
-            const element = document.getElementById('typewriter-text');
-            let i = 0;
-            element.innerHTML = "";
-            function type() {
-                if (i < letterText.length) {
-                    element.innerHTML += letterText.charAt(i);
-                    i++;
-                    setTimeout(type, 50);
-                }
-            }
-            type();
         }
 
-        // --- CONTADOR ---
-        const start = new Date(2023, 1, 27).getTime();
-        setInterval(() => {
+        // --- 2. TELA DE ENTRADA ---
+        document.getElementById('start-btn').addEventListener('click', function() {
+            entranceScreen.style.opacity = '0';
+            setTimeout(() => { 
+                entranceScreen.style.display = 'none'; 
+                document.body.style.overflowY = 'auto'; 
+                reveal(); 
+            }, 1000);
+        });
+
+        // --- 3. MÁQUINA DE ESCREVER NA CARTA ---
+        const envelopeTrigger = document.getElementById('envelope-trigger');
+        const typewriterText = document.getElementById('typewriter-text');
+        
+        // Texto que será digitado (usei \n\n para os parágrafos)
+        const letterString = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho.\n\nJuntos, somos eu e você. Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.\n\nSaiba que você é a pessoa que pedi a Deus. Quero ter você para sempre em minha vida. Quero passar anos e anos ao lado da mulher incrível que você é.\n\nHoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!\n\nWellington Andrade.";
+        
+        let isTyping = false;
+        let textIndex = 0;
+
+        function typeLetter() {
+            if (textIndex < letterString.length) {
+                typewriterText.innerHTML += letterString.charAt(textIndex);
+                textIndex++;
+                
+                // Rola a carta para baixo automaticamente conforme escreve
+                typewriterText.scrollTop = typewriterText.scrollHeight;
+                
+                // Velocidade de digitação aleatória para parecer real (entre 30ms e 80ms)
+                let typingSpeed = Math.floor(Math.random() * 50) + 30;
+                setTimeout(typeLetter, typingSpeed);
+            } else {
+                // Remove o cursor quando termina
+                typewriterText.classList.remove('typing-cursor');
+            }
+        }
+
+        envelopeTrigger.addEventListener('click', function() {
+            if (!this.classList.contains('is-open')) {
+                this.classList.add('is-open');
+                
+                // Começa a digitar 800ms DEPOIS que a carta sobe
+                if (!isTyping) {
+                    isTyping = true;
+                    setTimeout(typeLetter, 800);
+                }
+            } else {
+                // Se clicar para fechar, pode manter aberto ou fechar (opcional)
+                this.classList.remove('is-open');
+            }
+        });
+
+        // --- 4. SCROLL REVEAL SUAVE ---
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 80) reveals[i].classList.add("active");
+            }
+        }
+        window.addEventListener("scroll", reveal);
+
+        // --- 5. CONTADOR COM SEGUNDOS ---
+        const startDate = new Date(2023, 1, 27).getTime(); 
+        setInterval(function() {
             const now = new Date().getTime();
-            const d = now - start;
-            document.getElementById('days').innerText = Math.floor(d/(1000*60*60*24));
-            document.getElementById('hours').innerText = Math.floor((d%(1000*60*60*24))/(1000*60*60));
-            document.getElementById('minutes').innerText = Math.floor((d%(1000*60*60))/(1000*60));
+            const distance = now - startDate;
+            document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000);
         }, 1000);
 
-        // --- REVEAL ---
-        function reveal() {
-            document.querySelectorAll('.reveal').forEach(el => {
-                if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
-            });
-        }
-        window.onscroll = reveal;
-
-        // --- CORAÇÕES ---
-        setInterval(() => {
+        // --- 6. CORAÇÕES SUTIS ---
+        setInterval(function() {
             const h = document.createElement('div');
             h.className = 'heart'; h.innerHTML = '❤️';
-            h.style.left = Math.random()*100+'vw';
-            h.style.fontSize = Math.random()*20+10+'px';
-            h.style.animationDuration = Math.random()*3+3+'s';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = (Math.random() * 5 + 8) + 's';
+            h.style.fontSize = Math.random() * 10 + 10 + 'px';
             document.getElementById('hearts-container').appendChild(h);
-            setTimeout(() => h.remove(), 6000);
-        }, 400);
+            setTimeout(() => { h.remove(); }, 13000);
+        }, 1200);
+
+        // --- 7. ARRASTAR VARAL ---
+        const slider = document.getElementById('varal');
+        let isDown = false, startX, scrollLeft;
+        slider.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
+        slider.addEventListener('mouseleave', () => isDown = false);
+        slider.addEventListener('mouseup', () => isDown = false);
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            slider.scrollLeft = scrollLeft - ((e.pageX - slider.offsetLeft) - startX) * 2;
+        });
     </script>
 </body>
 </html>
