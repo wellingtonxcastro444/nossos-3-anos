@@ -5,351 +5,248 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3 Anos com Você</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&family=Dancing+Script:wght@600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         /* --- RESET E BASES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background-color: #Fdfbf7; color: #2C3E50; line-height: 1.6; overflow-x: hidden; overflow-y: hidden; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; color: #1a1a1a; }
-
-        /* --- 1. TELA DE SENHA (QUIZ) --- */
+        
+        /* --- 1. TELA DE SENHA --- */
         #password-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #1e293b; z-index: 200000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; color: #F9F7F3;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #1a1a1a; z-index: 200000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;
         }
         .pass-content { 
             background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 20px; text-align: center; 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1); max-width: 400px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); max-width: 400px; width: 100%;
         }
-        .pass-content h2 { color: #fff; margin-bottom: 25px; font-size: 1.6rem; letter-spacing: 1px; }
-        .pass-input { 
-            width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); 
-            border-radius: 10px; text-align: center; font-size: 1.1rem; outline: none; background: rgba(255,255,255,0.9); transition: all 0.3s ease;
-        }
-        .pass-input:focus { border-color: #A67B5B; box-shadow: 0 0 10px rgba(166, 123, 91, 0.3); }
-        .pass-btn { 
-            width: 100%; padding: 15px; border: none; border-radius: 10px; background: linear-gradient(135deg, #A67B5B, #8D6E63); 
-            color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; 
-        }
-        .pass-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(166, 123, 91, 0.3); }
-        #pass-error { color: #ff6b6b; margin-top: 15px; font-weight: 500; display: none; font-size: 0.95rem; }
+        .pass-input { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 10px; border: none; text-align: center; font-size: 1.1rem; }
+        .pass-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; background: #A67B5B; color: white; font-weight: bold; cursor: pointer; }
 
-        /* --- 2. TELA DE ENTRADA (CINEMA) --- */
+        /* --- 2. O FEITIÇO DA VARINHA (REVELIO) --- */
+        #wand-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 150000;
+            display: none; justify-content: center; align-items: center; pointer-events: none;
+        }
+        .wand {
+            width: 200px; transform: rotate(-45deg);
+            filter: drop-shadow(0 0 10px #fff);
+            animation: wandMagic 2s forwards;
+        }
+        @keyframes wandMagic {
+            0% { transform: rotate(-45deg) translate(-100px, 100px); opacity: 0; }
+            50% { transform: rotate(-20deg) translate(0, 0); opacity: 1; }
+            80% { transform: rotate(-10deg) scale(1.2); filter: drop-shadow(0 0 30px #fff); }
+            100% { transform: rotate(-10deg) scale(1); opacity: 0; }
+        }
+        .magic-flash {
+            position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%;
+            box-shadow: 0 0 100px 50px white; opacity: 0;
+            animation: flashAnim 0.8s 1.5s forwards;
+        }
+        @keyframes flashAnim {
+            0% { transform: scale(1); opacity: 0; }
+            50% { transform: scale(50); opacity: 1; }
+            100% { transform: scale(100); opacity: 0; }
+        }
+
+        /* --- 3. TELA DE ENTRADA (CINEMA) --- */
         #entrance-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #111; z-index: 100000;
-            display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1.5s ease, visibility 1.5s ease;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0a0a0a; z-index: 100000;
+            display: none; flex-direction: column; justify-content: center; align-items: center; transition: 1.5s opacity;
         }
-        #entrance-screen.hidden { opacity: 0; visibility: hidden; }
-        .entrance-text { color: #Fdfbf7; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 40px; letter-spacing: 2px; text-align: center; padding: 0 20px; font-style: italic;}
-        .pulse-btn { background: none; border: none; font-size: 5rem; cursor: pointer; animation: pulse 2s infinite; outline: none; -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 0 15px rgba(231, 76, 60, 0.4)); }
-        @keyframes pulse { 0% { transform: scale(0.95); } 50% { transform: scale(1.15); } 100% { transform: scale(0.95); } }
+        .pulse-btn { background: none; border: none; font-size: 5rem; cursor: pointer; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
 
-        /* --- EFEITO REVELAÇÃO E CORAÇÕES --- */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        /* --- EFEITOS GERAIS --- */
+        .reveal { opacity: 0; transform: translateY(50px); transition: 1s all; }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        .hearts-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
-        .heart { position: absolute; color: #e74c3c; opacity: 0.6; animation: fall linear forwards; }
-        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 0; } 10% { opacity: 0.8; } 100% { transform: translateY(110vh) rotate(360deg) scale(1.5); opacity: 0; } }
+        .hearts-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
+        .heart { position: absolute; color: #e74c3c; animation: fall linear forwards; }
+        @keyframes fall { 0% { transform: translateY(-10vh); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
 
-        /* --- LAYOUT GERAL --- */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.8)), url('fotocapa.jpeg') center/cover no-repeat; color: white; padding: 20px; position: relative; }
-        .hero h1 { font-size: clamp(3.5rem, 8vw, 6rem); margin-bottom: 10px; text-shadow: 2px 4px 15px rgba(0,0,0,0.4); color: #ffffff; letter-spacing: -1px; }
-        .hero p { font-size: clamp(1.1rem, 2.5vw, 1.5rem); letter-spacing: 5px; text-transform: uppercase; font-weight: 300; opacity: 0.9;}
-        
-        .highlight-section { padding: 80px 20px 40px 20px; display: flex; justify-content: center; background-color: transparent; }
-        .polaroid-big { background: #ffffff; padding: 15px 15px 25px 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-radius: 6px; max-width: 400px; width: 100%; transform: rotate(-2deg); transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 2; }
-        .polaroid-big:hover { transform: rotate(0deg) scale(1.03); box-shadow: 0 30px 60px rgba(0,0,0,0.12); z-index: 10; }
-        .polaroid-big img { width: 100%; height: auto; border-radius: 4px; display: block; }
-        .polaroid-text-big { text-align: center; font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #333; margin-top: 15px; line-height: 1.2; }
-        
-        .counter-section { padding: 40px 20px 80px 20px; text-align: center; }
-        .counter-section h2 { font-size: 2.2rem; margin-bottom: 40px; color: #8D6E63; letter-spacing: 1px; }
-        .counter-box { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; }
-        .time-block { background: #ffffff; padding: 25px 30px; border-radius: 20px; min-width: 130px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0,0,0,0.02); transition: transform 0.3s ease; }
-        .time-block:hover { transform: translateY(-8px); }
-        .time-block span { display: block; font-size: 3rem; font-weight: 700; font-family: 'Playfair Display', serif; color: #2C3E50; line-height: 1.1; }
-        .time-block p { margin-top: 8px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: #95a5a6; font-weight: 600; }
+        /* --- LAYOUT --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; position: relative; overflow: hidden; }
+        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('fotocapa.jpeg') center/cover; z-index: -1; }
+        .hero h1 { font-size: 4rem; text-shadow: 2px 2px 20px #000; }
 
-        /* --- 3. O ENVELOPE E A CARTA ANTIGA --- */
-        .story-container { padding: 60px 20px 150px 20px; display: flex; flex-direction: column; align-items: center; }
-        .story-container h2 { font-size: 2.8rem; margin-bottom: 10px; color: #8D6E63; }
-        .story-container > p { color: #7f8c8d; margin-bottom: 40px; font-style: italic; }
-        
-        .envelope-wrapper { position: relative; width: 100%; max-width: 600px; height: 350px; margin-top: 30px; perspective: 1200px; cursor: pointer; }
-        
-        /* Dica visual para ela clicar */
-        .envelope-wrapper::after {
-            content: 'Toque para abrir'; position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
-            font-size: 0.9rem; color: #A67B5B; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
-            animation: bounce 2s infinite; opacity: 0.8;
-        }
-        @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -10px); } }
-        .envelope-wrapper.is-open::after { display: none; }
+        /* CONTADOR */
+        .time-block { background: #fff; padding: 20px; border-radius: 20px; min-width: 120px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+        .time-block span { display: block; font-size: 2.5rem; font-weight: bold; font-family: 'Playfair Display'; }
 
-        .envelope { position: absolute; width: 100%; height: 100%; background-color: #d1bfae; box-shadow: 0 25px 50px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; z-index: 2; transition: all 0.8s ease-in-out; }
-        .envelope-flap { position: absolute; top: 0; left: 0; width: 100%; height: 55%; background-color: #c4b09d; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: all 0.8s ease-in-out 0.2s; z-index: 5; }
-        .envelope-seal { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); font-size: 3.5rem; z-index: 6; transition: all 0.8s ease-in-out 0.2s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
-        .envelope-front { position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background-color: #dfcdbd; clip-path: polygon(0 0, 50% 35%, 100% 0, 100% 100%, 0 100%); z-index: 4; }
-        .envelope-to { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); font-family: 'Dancing Script', cursive; font-size: 2rem; color: #5D4037; z-index: 7; }
-
-        /* A CARTA (Visual Melhorado e Fonte Legível) */
-        .letter-content {
-            position: absolute; top: 40%; left: 5%; width: 90%;
-            background-color: #faf6f0;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23d4b997' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
-            padding: 40px 35px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-radius: 4px;
-            z-index: 1; transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1); transform: translateY(0); opacity: 0;
-            
-            /* Melhorias na tipografia da carta */
-            font-family: 'Caveat', cursive; /* FONTE NOVA: Legível e romântica */
-            font-size: 1.8rem; /* Tamanho confortável */
-            color: #3e2723; /* Marrom bem escuro para contraste perfeito */
-            line-height: 1.4;
-            border: 1px solid #eadecf;
-            max-height: 80vh; /* Se o celular for pequeno, cria rolagem dentro da carta */
-            overflow-y: auto;
+        /* ENVELOPE E CARTA */
+        .story-container { padding: 100px 20px; display: flex; flex-direction: column; align-items: center; }
+        .envelope-wrapper { position: relative; width: 100%; max-width: 500px; height: 300px; cursor: pointer; perspective: 1000px; animation: float 3s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        .envelope { position: absolute; width: 100%; height: 100%; background: #d1bfae; border-radius: 8px; z-index: 2; transition: 0.8s; }
+        .envelope-flap { position: absolute; top: 0; width: 100%; height: 50%; background: #c4b09d; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: 0.8s; z-index: 5; }
+        .letter-content { 
+            position: absolute; top: 10%; left: 5%; width: 90%; background: #faf6f0; padding: 30px; 
+            font-family: 'Caveat', cursive; font-size: 1.6rem; opacity: 0; transition: 1s; z-index: 1; border: 1px solid #eadecf;
+            max-height: 400px; overflow-y: auto;
         }
 
-        /* Oculta a barra de rolagem da carta para ficar elegante, mas permite rolar */
-        .letter-content::-webkit-scrollbar { width: 4px; }
-        .letter-content::-webkit-scrollbar-thumb { background: #d1bfae; border-radius: 10px; }
+        .envelope-wrapper.is-open .envelope-flap { transform: rotateX(180deg); }
+        .envelope-wrapper.is-open .letter-content { transform: translateY(-100%); opacity: 1; z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
 
-        .envelope-wrapper.is-open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope-wrapper.is-open .envelope-seal { transform: translate(-50%, -50%) rotateX(180deg); opacity: 0; }
-        .envelope-wrapper.is-open .letter-content { transform: translateY(-75%); opacity: 1; z-index: 10; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+        /* VARAL */
+        .varal-container { display: flex; overflow-x: auto; padding: 40px; gap: 30px; }
+        .polaroid-hanging { background: #fff; padding: 10px 10px 20px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex: 0 0 auto; width: 250px; }
+        .polaroid-hanging img { width: 100%; height: 220px; object-fit: cover; }
+        .polaroid-caption { font-family: 'Dancing Script'; text-align: center; margin-top: 10px; font-size: 1.5rem; }
 
-        .signature { text-align: right !important; font-family: 'Dancing Script', cursive !important; font-size: 2.2rem !important; margin-top: 30px !important; color: #8D6E63; }
-
-        /* --- VARAL DE FOTOS --- */
-        .gallery-section { padding: 60px 0 120px 0; position: relative; overflow: hidden; }
-        .gallery-section::before { content: ''; position: absolute; top: 130px; left: -5%; width: 110%; height: 3px; background: repeating-linear-gradient(45deg, #8D6E63, #8D6E63 4px, #6D4C41 4px, #6D4C41 8px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1; transform: rotate(-1deg); }
-        .varal-container { display: flex; overflow-x: auto; padding: 40px 40px 80px 40px; gap: 40px; scrollbar-width: thin; scrollbar-color: #A67B5B transparent; -webkit-overflow-scrolling: touch; }
-        .varal-container::-webkit-scrollbar { height: 6px; }
-        .varal-container::-webkit-scrollbar-track { background: transparent; }
-        .varal-container::-webkit-scrollbar-thumb { background-color: #A67B5B; border-radius: 10px; }
-        
-        .polaroid-hanging { background: #ffffff; padding: 12px 12px 25px 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-radius: 4px; flex: 0 0 auto; width: 280px; position: relative; margin-top: 60px; z-index: 2; transition: all 0.4s ease; animation: swing ease-in-out 4s infinite alternate; }
-        .polaroid-hanging::before { content: ''; position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 12px; height: 40px; background-color: #D7CCC8; border-right: 2px solid #A1887F; border-radius: 2px; box-shadow: 2px 2px 4px rgba(0,0,0,0.2); z-index: 3; }
-        .polaroid-hanging:nth-child(odd) { animation-duration: 4.5s; transform: rotate(-2deg); }
-        .polaroid-hanging:nth-child(even) { animation-duration: 5s; transform: rotate(2deg); }
-        .polaroid-hanging:nth-child(3n) { animation-delay: 0.5s; }
-        .polaroid-hanging:hover { transform: scale(1.08) rotate(0deg) !important; box-shadow: 0 25px 50px rgba(0,0,0,0.2); z-index: 10; animation-play-state: paused; }
-        .polaroid-hanging img { width: 100%; height: 260px; object-fit: cover; border-radius: 3px; display: block; border: 1px solid #f5f5f5; }
-        .polaroid-caption { text-align: center; font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #4a3c31; margin-top: 15px; }
-
-        /* --- MÚSICA E RODAPÉ --- */
-        .music-section { text-align: center; padding: 80px 20px 100px 20px; background-color: #ffffff; }
-        .music-section h2 { margin-bottom: 10px; font-size: 2.2rem; color: #8D6E63; }
-        .music-section p { color: #95a5a6; margin-bottom: 30px; letter-spacing: 1px; }
-        .music-wrapper { max-width: 600px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
-        .music-section iframe { display: block; }
-        footer { text-align: center; padding: 50px 20px; background-color: #1a1a1a; color: #f1f1f1; }
-        footer p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; opacity: 0.7; }
-
-        /* --- RESPONSIVIDADE PARA CELULARES --- */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 3rem; }
-            .time-block { min-width: 100px; padding: 20px 15px; }
-            .time-block span { font-size: 2.2rem; }
-            .polaroid-big { max-width: 90%; }
-            .envelope-wrapper { height: 280px; } /* Ajuste altura no celular */
-            .letter-content { font-size: 1.5rem; padding: 30px 20px; transform: translateY(0); }
-            .envelope-wrapper.is-open .letter-content { transform: translateY(-70%); }
-            .polaroid-hanging { width: 240px; padding: 10px 10px 20px 10px;} 
-            .polaroid-hanging img { height: 220px; }
-            .story-container h2 { font-size: 2.2rem; }
-        }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .time-block { min-width: 80px; } }
     </style>
 </head>
 <body>
 
     <div id="password-screen">
         <div class="pass-content">
-            <h2>🔒 Quiz do Nosso Amor</h2>
-            <p style="margin-bottom: 25px; opacity: 0.9;">Para acessar nossa história, digite a senha secreta.</p>
-            <input type="text" id="pass-input" class="pass-input" placeholder="Digite a senha aqui...">
-            <button id="pass-btn" class="pass-btn">Destrancar meu coração</button>
-            <p id="pass-error">Senha incorreta, tente novamente meu amor!</p>
+            <h2 style="color:white">🔒 Qual o nosso segredo?</h2>
+            <input type="text" id="pass-input" class="pass-input" placeholder="Digite a senha...">
+            <button id="pass-btn" class="pass-btn">REVELIO</button>
+            <p id="pass-error" style="color:red; display:none; margin-top:10px">Tente novamente, bruxinha!</p>
         </div>
     </div>
 
+    <div id="wand-container">
+        <svg class="wand" viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 5 L90 3 L100 5 L90 7 Z" fill="#4e342e"/>
+            <circle cx="98" cy="5" r="2" fill="#fff"/>
+        </svg>
+        <div class="magic-flash"></div>
+    </div>
+
     <div id="entrance-screen">
-        <p class="entrance-text">Para a mulher da minha vida.</p>
+        <p style="color:white; font-family:'Playfair Display'; font-size: 1.5rem; margin-bottom: 20px">Feitiço aceito...</p>
         <button class="pulse-btn" id="start-btn">❤️</button>
-        <p style="color: #888; font-size: 0.85rem; margin-top: 15px; letter-spacing: 1px; text-transform: uppercase;">Toque no coração para iniciar</p>
     </div>
 
     <div class="hearts-container" id="hearts-container"></div>
 
     <section class="hero">
+        <div class="hero-bg"></div>
         <h1>3 Anos de Nós</h1>
-        <p>A melhor decisão que já tomei</p>
-    </section>
-
-    <section class="highlight-section reveal">
-        <div class="polaroid-big">
-            <img src="foto2.jpeg" alt="Nossa primeira foto juntos">
-            <div class="polaroid-text-big">Nossa primeira foto juntos ❤️</div>
-        </div>
+        <p>A melhor decisão da minha vida</p>
     </section>
 
     <section class="counter-section reveal">
-        <h2>Nosso Tempo Juntos</h2>
-        <div class="counter-box" id="counter">
+        <h2 style="text-align:center; margin-bottom:30px">Nosso Tempo Juntos</h2>
+        <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap">
             <div class="time-block"><span id="days">0</span><p>Dias</p></div>
             <div class="time-block"><span id="hours">0</span><p>Horas</p></div>
             <div class="time-block"><span id="minutes">0</span><p>Minutos</p></div>
-            <div class="time-block"><span id="seconds">0</span><p>Segundos</p></div>
         </div>
     </section>
 
     <section class="story-container reveal">
-        <h2>Uma Carta para Você</h2>
-        <p>(Toque no envelope para abrir)</p>
-        
+        <h2 style="margin-bottom:20px; color:#A67B5B">Uma Carta Mágica</h2>
         <div class="envelope-wrapper" id="envelope-trigger">
-            
             <div class="envelope">
                 <div class="envelope-flap"></div>
-                <div class="envelope-seal">❤️</div>
-                <div class="envelope-front"></div>
-                <div class="envelope-to">Para: Flávia</div>
+                <p style="position:absolute; bottom:20px; width:100%; text-align:center; font-family:'Dancing Script'; font-size:1.5rem">Para: Flávia</p>
             </div>
-
-            <div class="letter-content">
-                <p><strong>Minha querida Flávia,</strong></p>
-                <br>
-                <p>Começamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho. Somos o pilar e o porto seguro um do outro, nos apoiando em todos os momentos.</p>
-                <br>
-                <p>Juntos, somos eu e você, e você e eu. Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.</p>
-                <br>
-                <p>Saiba que você é a pessoa que pedi a Deus. Quero ter você para sempre em minha vida. Afinal, temos 1.096 dias de amor, amizade, companheirismo, fidelidade, respeito e brincadeiras. Quero passar anos e anos ao lado da mulher incrível que você é.</p>
-                <br>
-                <p style="text-align: center; font-weight: 600; font-size: 2rem;">Hoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!</p>
-                <p class="signature">Wellington Andrade.</p>
-            </div>
-
+            <div class="letter-content" id="typewriter-text">
+                </div>
         </div>
     </section>
 
     <section class="gallery-section reveal">
-        <h2 style="text-align: center; color: #8D6E63; margin-bottom: 30px; font-family: 'Playfair Display', serif; font-size: 2.2rem;">Arraste para ver nosso varal de memórias</h2>
+        <h2 style="text-align:center">Nossas Memórias</h2>
         <div class="varal-container">
-            <div class="polaroid-hanging"><img src="foto1.jpeg" alt="Foto 1"><div class="polaroid-caption">Lembranças</div></div>
-            <div class="polaroid-hanging"><img src="foto4.jpeg" alt="Foto 4"><div class="polaroid-caption">Amo você</div></div>
-            <div class="polaroid-hanging"><img src="foto5.jpeg" alt="Foto 5"><div class="polaroid-caption">Nosso dia</div></div>
-            <div class="polaroid-hanging"><img src="foto6.jpeg" alt="Foto 6"><div class="polaroid-caption">Sempre juntos</div></div>
-            <div class="polaroid-hanging"><img src="foto7.jpeg" alt="Foto 7"><div class="polaroid-caption">Meu amor</div></div>
-            <div class="polaroid-hanging"><img src="foto8.jpeg" alt="Foto 8"><div class="polaroid-caption">Nossas aventuras</div></div>
-            <div class="polaroid-hanging"><img src="foto9.jpeg" alt="Foto 9"><div class="polaroid-caption">Perfeitos</div></div>
-            <div class="polaroid-hanging"><img src="foto10.jpeg" alt="Foto 10"><div class="polaroid-caption">Momentos únicos</div></div>
-            <div class="polaroid-hanging"><img src="foto11.jpeg" alt="Foto 11"><div class="polaroid-caption">Sintonia</div></div>
-            <div class="polaroid-hanging"><img src="foto12.jpeg" alt="Foto 12"><div class="polaroid-caption">Nós dois</div></div>
-            <div class="polaroid-hanging"><img src="foto13.jpeg" alt="Foto 13"><div class="polaroid-caption">Sorrisos</div></div>
-            <div class="polaroid-hanging"><img src="foto14.jpeg" alt="Foto 14"><div class="polaroid-caption">Meu porto seguro</div></div>
-            <div class="polaroid-hanging"><img src="foto15.jpeg" alt="Foto 15"><div class="polaroid-caption">Cumplicidade</div></div>
-            <div class="polaroid-hanging"><img src="foto16.jpeg" alt="Foto 16"><div class="polaroid-caption">Completos</div></div>
-            <div class="polaroid-hanging"><img src="foto17.jpeg" alt="Foto 17"><div class="polaroid-caption">Para sempre</div></div>
-            <div class="polaroid-hanging"><img src="foto18.jpeg" alt="Foto 18"><div class="polaroid-caption">Meu dengo</div></div>
-            <div class="polaroid-hanging"><img src="foto19.jpeg" alt="Foto 19"><div class="polaroid-caption">Alegria</div></div>
-            <div class="polaroid-hanging"><img src="foto20.jpeg" alt="Foto 20"><div class="polaroid-caption">Nosso mundo</div></div>
-            <div class="polaroid-hanging"><img src="foto21.jpeg" alt="Foto 21"><div class="polaroid-caption">Sempre nós</div></div>
-            <div class="polaroid-hanging"><img src="foto22.jpeg" alt="Foto 22"><div class="polaroid-caption">Tudo pra mim</div></div>
+            <div class="polaroid-hanging"><img src="foto1.jpeg"><div class="polaroid-caption">Lembranças</div></div>
+            <div class="polaroid-hanging"><img src="foto4.jpeg"><div class="polaroid-caption">Meu amor</div></div>
+            <div class="polaroid-hanging"><img src="foto5.jpeg"><div class="polaroid-caption">Para sempre</div></div>
+            <div class="polaroid-hanging"><img src="foto22.jpeg"><div class="polaroid-caption">Tudo pra mim</div></div>
         </div>
     </section>
 
-    <section class="music-section reveal">
-        <h2>Nossa Trilha Sonora</h2>
-        <p>Dê o play para finalizar a leitura :)</p>
-        <div class="music-wrapper">
-            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/0GBsYdxpAPsOd6H8QzGCCU?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
+    <section class="music-section reveal" style="text-align:center; padding: 50px">
+        <iframe src="https://open.spotify.com/embed/track/SUA_TRACK_AQUI" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
     </section>
-
-    <footer>
-        <p>Com todo o meu amor, para sempre.</p>
-        <p>27 de Fevereiro de 2026</p>
-    </footer>
 
     <script>
-        // --- LÓGICA DA SENHA ---
-        const passBtn = document.getElementById('pass-btn');
-        const passInput = document.getElementById('pass-input');
-        const passError = document.getElementById('pass-error');
-        const passwordScreen = document.getElementById('password-screen');
-        const entranceScreen = document.getElementById('entrance-screen');
         const correctPass = "catitel";
+        const letterText = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos. Nesses 1.096 dias, vivemos o extraordinário. Você é meu porto seguro, a pessoa que pedi a Deus.\n\nJuntos construímos nossa família com Safira e Bela, e o futuro reserva ainda mais. Quero você para sempre, em cada vida que existir.\n\nHoje te amo mais que ontem, e amanhã te amarei mais que hoje.\n\nCom amor, Wellington.";
 
-        passBtn.addEventListener('click', checkPassword);
-        passInput.addEventListener('keypress', function(e) { if(e.key === 'Enter') checkPassword(); });
-
-        function checkPassword() {
-            if (passInput.value.toLowerCase().trim() === correctPass.toLowerCase()) {
-                passwordScreen.style.opacity = '0';
+        // --- SENHA E VARINHA ---
+        document.getElementById('pass-btn').onclick = function() {
+            const val = document.getElementById('pass-input').value.toLowerCase();
+            if(val === correctPass) {
+                confetti(); // Explosão de confetes
+                document.getElementById('password-screen').style.display = 'none';
+                const wand = document.getElementById('wand-container');
+                wand.style.display = 'flex';
+                
                 setTimeout(() => {
-                    passwordScreen.style.display = 'none';
-                    entranceScreen.style.display = 'flex'; 
-                }, 500);
+                    wand.style.display = 'none';
+                    document.getElementById('entrance-screen').style.display = 'flex';
+                }, 2500);
             } else {
-                passError.style.display = 'block';
-                passInput.value = '';
-                setTimeout(() => { passError.style.display = 'none'; }, 3000);
+                document.getElementById('pass-error').style.display = 'block';
             }
-        }
+        };
 
-        // --- LÓGICA DA TELA DE CINEMA ---
-        document.getElementById('start-btn').addEventListener('click', function() {
-            entranceScreen.classList.add('hidden');
-            setTimeout(() => { entranceScreen.style.display = 'none'; document.body.style.overflowY = 'auto'; }, 1500);
+        // --- INÍCIO DO SITE ---
+        document.getElementById('start-btn').onclick = function() {
+            document.getElementById('entrance-screen').style.display = 'none';
+            document.body.style.overflowY = 'auto';
             reveal();
-        });
+        };
 
-        // --- LÓGICA DO ENVELOPE INTERATIVO ---
-        const envelopeTrigger = document.getElementById('envelope-trigger');
-        envelopeTrigger.addEventListener('click', function() {
+        // --- ENVELOPE E MÁQUINA DE ESCREVER ---
+        let hasTyped = false;
+        document.getElementById('envelope-trigger').onclick = function() {
             this.classList.toggle('is-open');
-        });
-
-        // --- LÓGICA DO SCROLL REVEAL ---
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100;
-                if (elementTop < windowHeight - elementVisible) reveals[i].classList.add("active");
+            if(!hasTyped) {
+                typeWriter();
+                hasTyped = true;
             }
-        }
-        window.addEventListener("scroll", reveal);
+        };
 
-        // --- LÓGICA DO CONTADOR ---
-        const startDate = new Date(2023, 1, 27).getTime(); 
-        setInterval(function() {
+        function typeWriter() {
+            const element = document.getElementById('typewriter-text');
+            let i = 0;
+            element.innerHTML = "";
+            function type() {
+                if (i < letterText.length) {
+                    element.innerHTML += letterText.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
+            }
+            type();
+        }
+
+        // --- CONTADOR ---
+        const start = new Date(2023, 1, 27).getTime();
+        setInterval(() => {
             const now = new Date().getTime();
-            const distance = now - startDate;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById("days").innerText = days;
-            document.getElementById("hours").innerText = hours;
-            document.getElementById("minutes").innerText = minutes;
-            document.getElementById("seconds").innerText = seconds;
+            const d = now - start;
+            document.getElementById('days').innerText = Math.floor(d/(1000*60*60*24));
+            document.getElementById('hours').innerText = Math.floor((d%(1000*60*60*24))/(1000*60*60));
+            document.getElementById('minutes').innerText = Math.floor((d%(1000*60*60))/(1000*60));
         }, 1000);
 
-        // --- LÓGICA DOS CORAÇÕES ---
-        function createHeart() {
-            const container = document.getElementById('hearts-container');
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
-            heart.style.fontSize = Math.random() * 15 + 10 + 'px';
-            container.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 6000);
+        // --- REVEAL ---
+        function reveal() {
+            document.querySelectorAll('.reveal').forEach(el => {
+                if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
+            });
         }
-        setInterval(createHeart, 400);
+        window.onscroll = reveal;
+
+        // --- CORAÇÕES ---
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.className = 'heart'; h.innerHTML = '❤️';
+            h.style.left = Math.random()*100+'vw';
+            h.style.fontSize = Math.random()*20+10+'px';
+            h.style.animationDuration = Math.random()*3+3+'s';
+            document.getElementById('hearts-container').appendChild(h);
+            setTimeout(() => h.remove(), 6000);
+        }, 400);
     </script>
 </body>
 </html>
