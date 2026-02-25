@@ -25,18 +25,14 @@
             background: rgba(255, 255, 255, 0.03); padding: 50px 40px; border-radius: 16px; text-align: center; 
             backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); max-width: 400px; width: 100%;
         }
-        .pass-content h2 { font-family: 'Playfair Display', serif; color: #fff; margin-bottom: 20px; font-size: 1.8rem; font-weight: 400;}
         .pass-input { 
             width: 100%; padding: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.2); 
             border-radius: 8px; text-align: center; font-size: 1rem; outline: none; background: transparent; color: white; transition: all 0.3s ease; letter-spacing: 2px;
         }
-        .pass-input:focus { border-color: #A67B5B; background: rgba(255,255,255,0.05); }
         .pass-btn { 
             width: 100%; padding: 15px; border: none; border-radius: 8px; background: #A67B5B; 
             color: white; font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.3s ease; 
         }
-        .pass-btn:hover { background: #8D6E63; }
-        #pass-error { color: #e74c3c; margin-top: 15px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s ease; }
 
         /* --- 2. LANTERNAS FLUTUANTES (ENROLADOS) --- */
         .lantern-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
@@ -53,7 +49,7 @@
             100% { transform: translateY(-125vh) rotate(25deg); opacity: 0; }
         }
 
-        /* --- 3. A VARINHA (REVELIO COM FOTO) --- */
+        /* --- 3. A VARINHA (REVELIO) --- */
         #magic-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 150000;
             display: none; justify-content: center; align-items: center; overflow: hidden;
@@ -79,14 +75,36 @@
             100% { transform: translate(-50%, -50%) scale(300); opacity: 0; }
         }
 
-        /* --- 4. TELA DE ENTRADA (CINEMA) --- */
+        /* --- 4. RASTRO MÁGICO (STARDUST) --- */
+        .sparkle { position: fixed; width: 6px; height: 6px; background: #DAA520; border-radius: 50%; pointer-events: none; z-index: 10000; box-shadow: 0 0 10px #FFD700; animation: fadeSparkle 0.8s forwards; }
+        @keyframes fadeSparkle { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0); } }
+
+        /* --- 5. POMO DE OURO --- */
+        #snitch { position: fixed; width: 60px; height: auto; z-index: 9000; cursor: pointer; transition: all 1.2s ease-in-out; display: none; filter: drop-shadow(0 0 10px gold); }
+
+        /* --- 6. TELA DE ENTRADA --- */
         #entrance-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0a0a0a; z-index: 100000;
             display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 2s ease;
         }
-        .entrance-text { color: #e0e0e0; font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 40px; letter-spacing: 3px; font-style: italic;}
         .pulse-btn { background: none; border: none; font-size: 4.5rem; cursor: pointer; animation: pulseHeart 2s infinite ease-in-out; outline: none; -webkit-tap-highlight-color: transparent; }
         @keyframes pulseHeart { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(231, 76, 60, 0.2)); } 50% { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(231, 76, 60, 0.6)); } }
+
+        /* --- PEGADAS (HARRY POTTER) --- */
+        .footstep { position: absolute; width: 25px; height: 12px; background: rgba(0,0,0,0.4); border-radius: 50% 50% 40% 40%; pointer-events: none; z-index: 5; opacity: 0; animation: footstepFade 2s forwards; }
+        @keyframes footstepFade { 0% { opacity: 0; } 20% { opacity: 0.5; } 100% { opacity: 0; } }
+
+        /* --- FLOR MÁGICA (ENROLADOS) --- */
+        #healing-flower { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; cursor: pointer; z-index: 10001; filter: drop-shadow(0 0 10px gold); transition: 0.3s; }
+        .heal-flash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: gold; opacity: 0; pointer-events: none; z-index: 200000; }
+        @keyframes healEffect { 0% { opacity: 0; } 50% { opacity: 0.5; } 100% { opacity: 0; } }
+
+        /* --- CRACHÁ GREY SLOAN (GREY'S ANATOMY) --- */
+        .badge-container { display: flex; justify-content: center; margin: 40px 0; }
+        .grey-badge { width: 300px; background: #fff; border: 2px solid #ddd; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 25px solid #1a3a5a; padding: 20px; text-align: center; font-family: 'Inter', sans-serif; position: relative; }
+        .badge-img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #1a3a5a; object-fit: cover; margin-bottom: 10px; }
+        .badge-info h4 { color: #1a3a5a; margin: 0; font-size: 1.1rem; }
+        .badge-info p { color: #d32f2f; font-weight: bold; font-size: 0.7rem; letter-spacing: 1px; margin-top: 5px; }
 
         /* --- REVEAL E CORAÇÕES --- */
         .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
@@ -130,7 +148,7 @@
         }
         .owl-flying { animation: owlFlyAndDrop 4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
-        /* --- 6. O ENVELOPE E A CARTA TIPO MÁQUINA DE ESCREVER --- */
+        /* --- 6. O ENVELOPE E A CARTA --- */
         .envelope-wrapper { position: relative; width: 100%; max-width: 600px; height: 350px; margin-top: 20px; perspective: 1000px; cursor: pointer; transition: transform 0.3s ease; }
         .envelope-wrapper:hover { transform: scale(1.02); }
         
@@ -147,10 +165,7 @@
             font-family: 'Caveat', cursive; font-size: 1.6rem; color: #4a403a; line-height: 1.5; border: 1px solid #f0e9e1; 
             max-height: 80vh; overflow-y: auto; white-space: pre-wrap; 
         }
-        .letter-content::-webkit-scrollbar { width: 6px; }
-        .letter-content::-webkit-scrollbar-thumb { background: rgba(166, 123, 91, 0.5); border-radius: 10px; }
-
-        /* Post-it Grey's Anatomy */
+        
         .post-it {
             position: absolute; right: -20px; bottom: -30px; width: 160px; height: 160px; background: #c5e1ef;
             box-shadow: 5px 5px 15px rgba(0,0,0,0.1); padding: 15px; transform: rotate(5deg);
@@ -167,25 +182,12 @@
         @keyframes blink { 50% { opacity: 0; } }
 
         /* --- 7. PASCAL (EASTER EGG) --- */
-        #pascal {
-            position: fixed; bottom: 15px; left: 15px; width: 45px; height: 45px; cursor: pointer; z-index: 1000; opacity: 0.6; transition: 0.3s;
-        }
+        #pascal { position: fixed; bottom: 15px; left: 15px; width: 45px; height: 45px; cursor: pointer; z-index: 1000; opacity: 0.6; transition: 0.3s; }
         #pascal:hover { opacity: 1; transform: scale(1.1) rotate(-10deg); }
-        #pascal-msg {
-            position: fixed; bottom: 70px; left: 20px; background: #fff; padding: 10px 15px; border-radius: 15px;
-            font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: #8D6E63; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: none; z-index: 1001; animation: popUp 0.3s ease-out;
-        }
+        #pascal-msg { position: fixed; bottom: 70px; left: 20px; background: #fff; padding: 10px 15px; border-radius: 15px; font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: #8D6E63; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: none; z-index: 1001; animation: popUp 0.3s ease-out; }
         @keyframes popUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- 8. RASTRO MÁGICO (STARDUST) --- */
-        .sparkle { position: fixed; width: 6px; height: 6px; background: #DAA520; border-radius: 50%; pointer-events: none; z-index: 10000; box-shadow: 0 0 10px #FFD700; animation: fadeSparkle 0.8s forwards; }
-        @keyframes fadeSparkle { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0); } }
-
-        /* --- 9. POMO DE OURO --- */
-        #snitch { position: fixed; width: 60px; height: auto; z-index: 9000; cursor: pointer; transition: all 1.2s ease-in-out; display: none; filter: drop-shadow(0 0 10px gold); }
-
-        /* --- VARAL DE FOTOS (SCROLL HORIZONTAL) --- */
+        /* --- VARAL DE FOTOS --- */
         .gallery-section { padding: 60px 0 100px 0; position: relative; overflow: hidden; }
         .gallery-section::before { content: ''; position: absolute; top: 120px; left: -5%; width: 110%; height: 2px; background: repeating-linear-gradient(45deg, #A1887F, #A1887F 5px, #8D6E63 5px, #8D6E63 10px); opacity: 0.6; z-index: 1; transform: rotate(-1deg); }
         .scroll-hint { text-align: center; color: #bcaaa4; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
@@ -204,6 +206,12 @@
         .polaroid-hanging img { width: 100%; height: 240px; object-fit: cover; border-radius: 2px; display: block; filter: brightness(0.98); transition: filter 0.3s; }
         .polaroid-hanging:hover img { filter: brightness(1.02); }
         .polaroid-caption { text-align: center; font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #4a403a; margin-top: 12px; }
+
+        .wanted-frame { background: #e9dcc9; border: 15px solid #d4b483; padding: 20px 20px 60px 20px; box-shadow: 10px 10px 30px rgba(0,0,0,0.2); position: relative; }
+        .wanted-frame::after { content: 'PROCURADA POR ROUBAR MEU CORAÇÃO'; position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center; font-family: 'Playfair Display', serif; font-weight: 900; color: #5D4037; font-size: 0.8rem; }
+
+        .dance-shake { animation: greyShake 0.5s ease-in-out infinite !important; }
+        @keyframes greyShake { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-10px); } }
 
         /* --- MÚSICA E RODAPÉ --- */
         .music-section { text-align: center; padding: 60px 20px 80px 20px; background-color: #ffffff; }
@@ -240,6 +248,7 @@
     </div>
 
     <div class="lantern-container" id="lanterns"></div>
+    <div class="heal-flash" id="heal-flash"></div>
 
     <div id="magic-screen">
         <div class="wand-container" id="wand-anim">
@@ -249,6 +258,10 @@
     </div>
 
     <img src="snitch.gif" id="snitch" onclick="catchSnitch()" alt="Pomo de Ouro">
+
+    <div id="healing-flower" onclick="healSite()">
+        <div style="font-size: 40px;">🌸</div>
+    </div>
 
     <div id="pascal">
         <img src="pascal.png" id="pascal-img" alt="Pascal" style="width: 100%;" onerror="this.outerHTML='<div id=\'pascal-emoji\' style=\'font-size: 35px; background: linear-gradient(to right, #740001, #DAA520, #740001); border-radius: 5px; padding: 2px; text-align:center;\'>🦎</div>'">
@@ -289,7 +302,19 @@
             <div class="time-block"><span id="minutes">0</span><p>Minutos</p></div>
             <div class="time-block"><span id="seconds">0</span><p>Segundos</p></div>
         </div>
+        <button onclick="danceItOut()" class="pass-btn" style="margin-top: 30px; font-size: 0.8rem; padding: 10px 20px; background: #c5e1ef; color: #1a3c5a;">💃 Dance It Out</button>
     </section>
+
+    <div class="badge-container reveal">
+        <div class="grey-badge">
+            <p style="font-weight: bold; color: #1a3a5a; font-size: 0.6rem; margin-bottom: 10px;">GREY SLOAN MEMORIAL HOSPITAL</p>
+            <img src="foto2.jpeg" class="badge-img" alt="Flávia">
+            <div class="badge-info">
+                <h4>DRA. FLÁVIA</h4>
+                <p>CHEFE DE CIRURGIA DO MEU CORAÇÃO</p>
+            </div>
+        </div>
+    </div>
 
     <section class="story-container reveal">
         <h2>Uma Carta para Você</h2>
@@ -323,7 +348,7 @@
             <div class="polaroid-hanging"><img src="foto5.jpeg"><div class="polaroid-caption">Nosso dia</div></div>
             <div class="polaroid-hanging"><img src="foto6.jpeg"><div class="polaroid-caption">Sempre juntos</div></div>
             <div class="polaroid-hanging"><img src="foto7.jpeg"><div class="polaroid-caption">Meu amor</div></div>
-            <div class="polaroid-hanging"><img src="foto8.jpeg"><div class="polaroid-caption">Nossas aventuras</div></div>
+            <div class="polaroid-hanging wanted-frame"><img src="foto8.jpeg"></div>
             <div class="polaroid-hanging"><img src="foto9.jpeg"><div class="polaroid-caption">Perfeitos</div></div>
             <div class="polaroid-hanging"><img src="foto10.jpeg"><div class="polaroid-caption">Momentos únicos</div></div>
             <div class="polaroid-hanging"><img src="foto11.jpeg"><div class="polaroid-caption">Sintonia</div></div>
@@ -348,13 +373,35 @@
         </div>
     </section>
 
-    <footer style="padding-bottom: 80px;">
+    <footer style="padding-bottom: 80px; text-align: center;">
         <p>Malfeito feito. ✨</p>
+        <h2 style="font-family: 'Playfair Display', serif; color: #DAA520; margin-top: 20px; font-style: italic; opacity: 0.8;">"Always."</h2>
         <p>27 de Fevereiro de 2026</p>
     </footer>
 
     <script>
-        // --- 1. RASTRO MÁGICO (STARDUST) ---
+        // --- PEGADAS MAPA DO MAROTO ---
+        window.addEventListener('scroll', function() {
+            if (Math.random() > 0.96) {
+                const step = document.createElement('div');
+                step.className = 'footstep';
+                step.style.left = Math.random() * 95 + 'vw';
+                step.style.top = window.scrollY + Math.random() * 600 + 'px';
+                step.style.transform = `rotate(${Math.random() * 360}deg)`;
+                document.body.appendChild(step);
+                setTimeout(() => step.remove(), 2000);
+            }
+        });
+
+        // --- FLOR MÁGICA (ENROLADOS) ---
+        function healSite() {
+            const flash = document.getElementById('heal-flash');
+            flash.style.animation = 'healEffect 1.5s forwards';
+            alert("Brilha linda flor, seu poder venceu... ✨🌸");
+            setTimeout(() => flash.style.animation = '', 1500);
+        }
+
+        // --- RASTRO MÁGICO ---
         document.addEventListener('mousemove', function(e) {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
@@ -364,7 +411,7 @@
             setTimeout(() => sparkle.remove(), 800);
         });
 
-        // --- 2. POMO DE OURO (MOVIMENTO) ---
+        // --- POMO DE OURO ---
         const snitch = document.getElementById('snitch');
         function moveSnitch() {
             if(snitch.style.display === 'block') {
@@ -378,21 +425,19 @@
             snitch.style.display = 'none';
         }
 
-        // --- 3. PASCAL CAMALEÃO (CLICK) ---
-        const psc = document.getElementById('pascal');
-        const pscColors = ['hue-rotate(0deg)', 'hue-rotate(90deg)', 'hue-rotate(200deg)', 'hue-rotate(300deg)'];
-        let pscIdx = 0;
-        psc.onclick = function() {
-            pscIdx = (pscIdx + 1) % pscColors.length;
-            const img = document.getElementById('pascal-img');
-            const emj = document.getElementById('pascal-emoji');
-            if(img) img.style.filter = pscColors[pscIdx];
-            if(emj) emj.style.filter = pscColors[pscIdx];
+        // --- PASCAL ---
+        const pascal = document.getElementById('pascal');
+        const colors = ['hue-rotate(0deg)', 'hue-rotate(90deg)', 'hue-rotate(200deg)', 'hue-rotate(300deg)'];
+        let colorIdx = 0;
+        pascal.onclick = function() {
+            colorIdx = (colorIdx + 1) % colors.length;
+            const target = document.getElementById('pascal-img') || document.getElementById('pascal-emoji');
+            if(target) target.style.filter = colors[colorIdx];
             document.getElementById('pascal-msg').style.display = 'block';
             setTimeout(() => { document.getElementById('pascal-msg').style.display = 'none'; }, 3500);
         };
 
-        // --- 4. LANTERNAS (ENROLADOS) ---
+        // --- LANTERNAS ---
         function createLantern() {
             const container = document.getElementById('lanterns');
             const lantern = document.createElement('div');
@@ -404,7 +449,14 @@
         }
         setInterval(createLantern, 1800);
 
-        // --- 5. SENHA E VARINHA ---
+        // --- DANCE IT OUT ---
+        function danceItOut() {
+            const photos = document.querySelectorAll('.polaroid-hanging');
+            photos.forEach(p => p.classList.add('dance-shake'));
+            setTimeout(() => photos.forEach(p => p.classList.remove('dance-shake')), 3000);
+        }
+
+        // --- SENHA E VARINHA ---
         const passBtn = document.getElementById('pass-btn');
         const passInput = document.getElementById('pass-input');
         const passError = document.getElementById('pass-error');
@@ -429,7 +481,7 @@
                     setTimeout(() => { 
                         magicScreen.style.display = 'none'; 
                         entranceScreen.style.display = 'flex'; 
-                        snitch.style.display = 'block'; // Ativa o Pomo de Ouro
+                        snitch.style.display = 'block';
                     }, 2500);
                 }, 500);
             } else {
@@ -439,13 +491,12 @@
             }
         }
 
-        // --- 6. TELA DE ENTRADA ---
         document.getElementById('start-btn').addEventListener('click', function() {
             entranceScreen.style.opacity = '0';
             setTimeout(() => { entranceScreen.style.display = 'none'; document.body.style.overflowY = 'auto'; reveal(); }, 1000);
         });
 
-        // --- 7. A CORUJA ---
+        // --- CORUJA ---
         const callOwlBtn = document.getElementById('call-owl-btn');
         const owlWrapper = document.getElementById('owl-wrapper');
         const owlLetter = document.getElementById('owl-letter');
@@ -467,7 +518,7 @@
             }, 1900);
         });
 
-        // --- 8. MÁQUINA DE ESCREVER ---
+        // --- MÁQUINA DE ESCREVER ---
         const typewriterText = document.getElementById('typewriter-text');
         const letterString = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho. Somos o pilar e o porto seguro um do outro, nos apoiando em todos os momentos, incentivando, acreditando e orando para que tudo dê certo em nossas vidas.\n\nJuntos, somos eu e você, e você e eu (é óbvio, kkk). Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.\n\nSaiba que você é a pessoa que pedi a Deus, a pessoa que está comigo desde o início. Quero ter você para sempre em minha vida (mesmo depois da última batida do meu coração e do meu último suspiro). E, se existirem outras vidas, eu te procuro em cada uma delas.\n\nMas, antes de isso acontecer, quero viver tudo o que há de melhor com você. Afinal, temos 1.096 dias de amor, amizade, companheirismo, fidelidade, respeito e brincadeiras. Quero passar anos e anos ao lado da mulher incrível que você é... Se eu fosse mencionar todas as suas qualidades, passaria horas escrevendo cada detalhe que você tem. Mas eu vejo que a sua maior qualidade é ser você mesma (acho que ficou confuso aqui, risada escandalosa ksksk).\n\nEntão, acho que nesta breve carta consegui expressar o que foram esses 3 anos ao seu lado, a cada dia te amando mais e mais.\n\nHoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!\n\nWellington Andrade de Castro.";
         
@@ -490,7 +541,6 @@
             } else { this.classList.remove('is-open'); }
         });
 
-        // --- 9. CONTADOR E REVEAL ---
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -516,7 +566,6 @@
             h.className = 'heart'; h.innerHTML = '❤️';
             h.style.left = Math.random() * 100 + 'vw';
             h.style.animationDuration = (Math.random() * 5 + 8) + 's';
-            h.style.fontSize = Math.random() * 10 + 10 + 'px';
             document.getElementById('hearts-container').appendChild(h);
             setTimeout(() => { h.remove(); }, 13000);
         }, 1200);
