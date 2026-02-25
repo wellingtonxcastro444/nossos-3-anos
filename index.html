@@ -1,690 +1,1273 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3 Anos com Você</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&family=Dancing+Script:wght@600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        /* --- RESET E BASES --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: #Fdfbf7; color: #2C3E50; line-height: 1.6; overflow-x: hidden; overflow-y: hidden; scroll-behavior: smooth; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; color: #1a1a1a; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3 Anos com Você</title>
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #Fdfbf7; }
-        ::-webkit-scrollbar-thumb { background: #d1bfae; border-radius: 10px; }
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
 
-        /* --- 1. TELA DE SENHA --- */
-        #password-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #111; z-index: 200000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; color: #F9F7F3;
-            transition: opacity 0.5s ease;
-        }
-        .pass-content { 
-            background: rgba(255, 255, 255, 0.03); padding: 50px 40px; border-radius: 16px; text-align: center; 
-            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); max-width: 400px; width: 100%;
-        }
-        .pass-input { 
-            width: 100%; padding: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.2); 
-            border-radius: 8px; text-align: center; font-size: 1rem; outline: none; background: transparent; color: white; transition: all 0.3s ease; letter-spacing: 2px;
-        }
-        .pass-btn { 
-            width: 100%; padding: 15px; border: none; border-radius: 8px; background: #A67B5B; 
-            color: white; font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.3s ease; 
-        }
+  <style>
+    /* --- RESET E BASES --- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-        /* --- 2. LANTERNAS FLUTUANTES (ENROLADOS) --- */
-        .lantern-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
-        .lantern {
-            position: absolute; bottom: -100px; width: 45px; height: 60px; background: rgba(255, 200, 50, 0.6);
-            border-radius: 8px; box-shadow: 0 0 25px 8px rgba(255, 160, 0, 0.4);
-            animation: floatLantern var(--d) linear infinite; display: flex; align-items: center; justify-content: center;
-        }
-        .lantern::before { content: '☀️'; font-size: 18px; opacity: 0.4; color: #5c4033; }
-        @keyframes floatLantern {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-125vh) rotate(25deg); opacity: 0; }
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0b0b;             /* Netflix vibe */
+      color: rgba(255,255,255,.92);
+      line-height: 1.6;
+      overflow-x: hidden;
+      overflow-y: hidden;                    /* libera depois do start */
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* --- 3. A VARINHA (REVELIO) --- */
-        #magic-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 150000;
-            display: none; justify-content: center; align-items: center; overflow: hidden;
-        }
-        .wand-container { position: absolute; width: 250px; transform: translate(50vw, 50vh) rotate(-30deg) scale(0); transform-origin: center; opacity: 0; }
-        .wand-img { width: 100%; height: auto; display: block; filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)); }
-        .spell-cast { animation: wandMovement 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-        @keyframes wandMovement {
-            0% { transform: translate(30vw, 80vh) rotate(-60deg) scale(0.5); opacity: 0; }
-            30% { transform: translate(0, -20vh) rotate(-10deg) scale(1); opacity: 1; }
-            60% { transform: translate(20vw, 0) rotate(-40deg) scale(1.1); opacity: 1; }
-            80% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 1; filter: brightness(1.5); }
-            100% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 0; }
-        }
-        .magic-flash {
-            position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 50px 20px #fff; opacity: 0; transform: translate(-50%, -50%); pointer-events: none;
-        }
-        .flash-active { animation: blindingFlash 1.5s forwards; }
-        @keyframes blindingFlash {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(200); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(300); opacity: 0; }
-        }
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: rgba(255,255,255,.95);
+    }
 
-        /* --- 4. RASTRO MÁGICO (STARDUST) --- */
-        .sparkle { position: fixed; width: 6px; height: 6px; background: #DAA520; border-radius: 50%; pointer-events: none; z-index: 10000; box-shadow: 0 0 10px #FFD700; animation: fadeSparkle 0.8s forwards; }
-        @keyframes fadeSparkle { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0); } }
+    :root{
+      --n-bg: #0b0b0b;
+      --n-surface: rgba(255,255,255,.06);
+      --n-border: rgba(255,255,255,.10);
+      --n-text: rgba(255,255,255,.92);
+      --n-muted: rgba(255,255,255,.68);
+      --n-red: #e50914;
+      --n-shadow: 0 24px 70px rgba(0,0,0,.65);
+      --n-radius: 14px;
+    }
 
-        /* --- 5. POMO DE OURO --- */
-        #snitch { position: fixed; width: 60px; height: auto; z-index: 9000; cursor: pointer; transition: all 1.2s ease-in-out; display: none; filter: drop-shadow(0 0 10px gold); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 10px; }
 
-        /* --- 6. TELA DE ENTRADA --- */
-        #entrance-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0a0a0a; z-index: 100000;
-            display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 2s ease;
-        }
-        .pulse-btn { background: none; border: none; font-size: 4.5rem; cursor: pointer; animation: pulseHeart 2s infinite ease-in-out; outline: none; -webkit-tap-highlight-color: transparent; }
-        @keyframes pulseHeart { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(231, 76, 60, 0.2)); } 50% { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(231, 76, 60, 0.6)); } }
+    :focus-visible{
+      outline: 3px solid rgba(229,9,20,.45);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
 
-        /* --- PEGADAS (HARRY POTTER) --- */
-        .footstep { position: absolute; width: 25px; height: 12px; background: rgba(0,0,0,0.4); border-radius: 50% 50% 40% 40%; pointer-events: none; z-index: 5; opacity: 0; animation: footstepFade 2s forwards; }
-        @keyframes footstepFade { 0% { opacity: 0; } 20% { opacity: 0.5; } 100% { opacity: 0; } }
+    /* ========== 1) LOGIN (SENHA) ESTILO NETFLIX ========== */
+    #password-screen{
+      position: fixed; inset: 0;
+      z-index: 200000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.78), rgba(0,0,0,.92)),
+        url('fotocapa.jpeg') center/cover no-repeat;
+    }
+    #password-screen::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 420px at 50% 28%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(1100px 520px at 10% 10%, rgba(229,9,20,.10), transparent 60%);
+      pointer-events:none;
+    }
 
-        /* --- FLOR MÁGICA (ENROLADOS) --- */
-        #healing-flower { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; cursor: pointer; z-index: 10001; filter: drop-shadow(0 0 10px gold); transition: 0.3s; }
-        .heal-flash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: gold; opacity: 0; pointer-events: none; z-index: 200000; }
-        @keyframes healEffect { 0% { opacity: 0; } 50% { opacity: 0.5; } 100% { opacity: 0; } }
+    .pass-content{
+      position: relative;
+      z-index: 2;
+      width: min(92vw, 420px);
+      background: rgba(0,0,0,.72);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 10px;
+      box-shadow: var(--n-shadow);
+      padding: 42px 34px;
+      text-align: left;
+    }
 
-        /* --- CRACHÁ GREY SLOAN (GREY'S ANATOMY) --- */
-        .badge-container { display: flex; justify-content: center; margin: 40px 0; }
-        .grey-badge { width: 300px; background: #fff; border: 2px solid #ddd; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 25px solid #1a3a5a; padding: 20px; text-align: center; font-family: 'Inter', sans-serif; position: relative; }
-        .badge-img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid #1a3a5a; object-fit: cover; margin-bottom: 10px; }
-        .badge-info h4 { color: #1a3a5a; margin: 0; font-size: 1.1rem; }
-        .badge-info p { color: #d32f2f; font-weight: bold; font-size: 0.7rem; letter-spacing: 1px; margin-top: 5px; }
+    .login-brand{
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--n-red);
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+    }
 
-        /* --- REVEAL E CORAÇÕES --- */
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        .hearts-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
-        .heart { position: absolute; color: #e74c3c; opacity: 0.4; animation: fall linear forwards; filter: blur(1px); }
-        @keyframes fall { 0% { transform: translateY(-10vh) scale(1) rotate(0deg); opacity: 0; } 20% { opacity: 0.5; } 100% { transform: translateY(110vh) scale(1.2) rotate(45deg); opacity: 0; } }
+    .pass-content h2{
+      font-family: Inter, sans-serif;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: rgba(255,255,255,.94);
+    }
 
-        /* --- CAPA E CONTADOR (GREY'S ANATOMY EKG) --- */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px; position: relative; overflow: hidden; }
-        .hero-bg { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; background: linear-gradient(rgba(20, 20, 20, 0.5), rgba(20, 20, 20, 0.8)), url('fotocapa.jpeg') center/cover no-repeat; z-index: -1; animation: subtleZoom 25s infinite alternate ease-in-out; }
-        @keyframes subtleZoom { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
-        .hero h1 { font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 10px; text-shadow: 0 4px 20px rgba(0,0,0,0.6); color: #ffffff; letter-spacing: -1px; font-weight: 400;}
-        .hero p { font-size: clamp(1rem, 2vw, 1.2rem); letter-spacing: 5px; text-transform: uppercase; font-weight: 300; opacity: 0.8;}
-        
-        .highlight-section { padding: 80px 20px 40px 20px; display: flex; justify-content: center; }
-        .polaroid-big { background: #ffffff; padding: 15px 15px 25px 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-radius: 4px; max-width: 400px; width: 100%; transform: rotate(-2deg); transition: transform 0.6s ease; z-index: 2; }
-        .polaroid-big:hover { transform: rotate(0deg) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.12); z-index: 10; }
-        .polaroid-big img { width: 100%; height: auto; border-radius: 2px; display: block; }
-        .polaroid-text-big { text-align: center; font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #2C3E50; margin-top: 15px; line-height: 1.2; }
-        
-        .counter-section { padding: 40px 20px 80px 20px; text-align: center; position: relative; }
-        .ekg-svg { position: absolute; top: 50%; left: 0; width: 100%; height: 80px; transform: translateY(-50%); opacity: 0.1; z-index: 0; pointer-events: none; }
-        .counter-section h2 { font-size: 2rem; margin-bottom: 40px; color: #8D6E63; font-weight: 400; position: relative; z-index: 1;}
-        .counter-box { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; position: relative; z-index: 1;}
-        .time-block { background: #ffffff; padding: 25px 20px; border-radius: 12px; min-width: 110px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); transition: transform 0.4s ease; }
-        .time-block:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(166, 123, 91, 0.1); }
-        .time-block span { display: block; font-size: 2.8rem; font-weight: 600; font-family: 'Playfair Display', serif; color: #2C3E50; line-height: 1; margin-bottom: 5px;}
-        .time-block p { margin: 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #A67B5B; }
+    .pass-content p.helper{
+      margin-bottom: 18px;
+      color: rgba(255,255,255,.65);
+      font-size: .9rem;
+    }
 
-        /* --- 5. A CORUJA ENTREGANDO A CARTA --- */
-        .story-container { padding: 60px 20px 150px 20px; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .story-container h2 { font-size: 2.5rem; margin-bottom: 5px; color: #8D6E63; font-weight: 400;}
-        .story-container > p { color: #95a5a6; margin-bottom: 30px; font-style: italic; font-size: 1rem; text-align: center;}
-        
-        @keyframes owlFlyAndDrop {
-            0% { left: 120%; top: -50px; transform: rotate(-15deg); opacity: 1; }
-            45% { left: 50%; top: 100px; transform: translateX(-50%) rotate(0deg); opacity: 1; }
-            55% { left: 50%; top: 100px; transform: translateX(-50%) rotate(0deg); opacity: 1; } 
-            100% { left: -50%; top: -100px; transform: translateX(-50%) rotate(15deg); opacity: 1; }
-        }
-        .owl-flying { animation: owlFlyAndDrop 4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+    .pass-input{
+      width: 100%;
+      padding: 14px 14px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 6px;
+      outline: none;
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.92);
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
 
-        /* --- 6. O ENVELOPE E A CARTA --- */
-        .envelope-wrapper { position: relative; width: 100%; max-width: 600px; height: 350px; margin-top: 20px; perspective: 1000px; cursor: pointer; transition: transform 0.3s ease; }
-        .envelope-wrapper:hover { transform: scale(1.02); }
-        
-        .envelope { position: absolute; width: 100%; height: 100%; background: #d4c4b7; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; z-index: 2; transition: all 0.8s ease; }
-        .envelope-flap { position: absolute; top: 0; left: 0; width: 100%; height: 55%; background: #c5b3a3; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform 0.8s ease 0.1s; z-index: 5; }
-        .envelope-seal { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); font-size: 3.5rem; z-index: 6; transition: opacity 0.4s ease 0.1s; color: #DAA520; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
-        .envelope-front { position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: #dfd1c6; clip-path: polygon(0 0, 50% 35%, 100% 0, 100% 100%, 0 100%); z-index: 4; }
-        .envelope-to { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #5D4037; z-index: 7; }
+    .pass-btn{
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(0,0,0,.20);
+      border-radius: 6px;
+      background: var(--n-red);
+      color: #fff;
+      font-size: .95rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      cursor: pointer;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      transition: transform .15s ease, filter .2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pass-btn:hover{ filter: brightness(1.05); transform: translateY(-1px); }
+    .pass-btn:active{ transform: translateY(1px); }
 
-        .letter-content {
-            position: absolute; top: 30%; left: 5%; width: 90%; background-color: #fcfaf8;
-            padding: 40px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-radius: 4px;
-            z-index: 1; transition: transform 1s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.8s ease; transform: translateY(0); opacity: 0;
-            font-family: 'Caveat', cursive; font-size: 1.6rem; color: #4a403a; line-height: 1.5; border: 1px solid #f0e9e1; 
-            max-height: 80vh; overflow-y: auto; white-space: pre-wrap; 
-        }
-        
-        .post-it {
-            position: absolute; right: -20px; bottom: -30px; width: 160px; height: 160px; background: #c5e1ef;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1); padding: 15px; transform: rotate(5deg);
-            font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: #1a3c5a; display: flex; align-items: center; justify-content: center; text-align: center;
-            opacity: 0; transition: opacity 1s ease 1s; z-index: 15;
-        }
+    #pass-error{
+      margin-top: 12px;
+      color: rgba(255,255,255,.72);
+      font-size: .9rem;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
 
-        .envelope-wrapper.is-open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope-wrapper.is-open .envelope-seal { opacity: 0; }
-        .envelope-wrapper.is-open .letter-content { transform: translateY(-65%); opacity: 1; z-index: 10; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
-        .envelope-wrapper.is-open .post-it { opacity: 1; }
+    /* ========== 2) LANTERNAS ========== */
+    .lantern-container { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+    .lantern{
+      position: absolute; bottom: -100px;
+      width: 45px; height: 60px;
+      background: rgba(255, 200, 50, 0.35);
+      border-radius: 10px;
+      box-shadow: 0 0 25px 8px rgba(255, 160, 0, 0.22);
+      border: 1px solid rgba(255,255,255,.10);
+      animation: floatLantern var(--d) linear infinite;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .lantern::before { content:'☀️'; font-size: 18px; opacity: 0.35; }
+    @keyframes floatLantern{
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-125vh) rotate(25deg); opacity: 0; }
+    }
 
-        .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; color: #A67B5B; }
-        @keyframes blink { 50% { opacity: 0; } }
+    /* ========== 3) VARINHA ========== */
+    #magic-screen{
+      position: fixed; inset: 0;
+      background: #000;
+      z-index: 150000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .wand-container{ position: absolute; width: 250px; transform-origin: center; opacity: 0; }
+    .wand-img{ width: 100%; height: auto; display:block; filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)); }
+    .spell-cast{ animation: wandMovement 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+    @keyframes wandMovement{
+      0% { transform: translate(30vw, 80vh) rotate(-60deg) scale(0.5); opacity: 0; }
+      30% { transform: translate(0, -20vh) rotate(-10deg) scale(1); opacity: 1; }
+      60% { transform: translate(20vw, 0) rotate(-40deg) scale(1.1); opacity: 1; }
+      80% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 1; filter: brightness(1.5); }
+      100% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 0; }
+    }
+    .magic-flash{
+      position:absolute;
+      top:50%; left:50%;
+      width:5px; height:5px;
+      background:#fff; border-radius:50%;
+      box-shadow: 0 0 50px 20px #fff;
+      opacity: 0;
+      transform: translate(-50%,-50%);
+      pointer-events:none;
+    }
+    .flash-active{ animation: blindingFlash 1.5s forwards; }
+    @keyframes blindingFlash{
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(200); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(300); opacity: 0; }
+    }
 
-        /* --- 7. PASCAL (EASTER EGG) --- */
-        #pascal { position: fixed; bottom: 15px; left: 15px; width: 45px; height: 45px; cursor: pointer; z-index: 1000; opacity: 0.6; transition: 0.3s; }
-        #pascal:hover { opacity: 1; transform: scale(1.1) rotate(-10deg); }
-        #pascal-msg { position: fixed; bottom: 70px; left: 20px; background: #fff; padding: 10px 15px; border-radius: 15px; font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: #8D6E63; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: none; z-index: 1001; animation: popUp 0.3s ease-out; }
-        @keyframes popUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* ========== 4) SPARKLE ========== */
+    .sparkle{
+      position: fixed;
+      width: 6px; height: 6px;
+      background: #DAA520;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      box-shadow: 0 0 10px #FFD700;
+      animation: fadeSparkle 0.8s forwards;
+    }
+    @keyframes fadeSparkle{
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0); }
+    }
 
-        /* --- VARAL DE FOTOS --- */
-        .gallery-section { padding: 60px 0 100px 0; position: relative; overflow: hidden; }
-        .gallery-section::before { content: ''; position: absolute; top: 120px; left: -5%; width: 110%; height: 2px; background: repeating-linear-gradient(45deg, #A1887F, #A1887F 5px, #8D6E63 5px, #8D6E63 10px); opacity: 0.6; z-index: 1; transform: rotate(-1deg); }
-        .scroll-hint { text-align: center; color: #bcaaa4; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
-        
-        .varal-container { display: flex; overflow-x: auto; padding: 20px 40px 60px 40px; gap: 40px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .varal-container::-webkit-scrollbar { display: none; } 
-        
-        .polaroid-hanging { background: #ffffff; padding: 10px 10px 20px 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-radius: 2px; flex: 0 0 auto; width: 260px; position: relative; margin-top: 50px; z-index: 2; transition: transform 0.4s; animation: gentleSwing 5s infinite alternate ease-in-out; }
-        .polaroid-hanging::before { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 10px; height: 35px; background: #D7CCC8; border-right: 1px solid #A1887F; border-radius: 2px; box-shadow: 2px 2px 4px rgba(0,0,0,0.1); z-index: 3; }
-        
-        @keyframes gentleSwing { 0% { transform: rotate(-1.5deg); } 100% { transform: rotate(1.5deg); } }
-        .polaroid-hanging:nth-child(odd) { animation-duration: 4s; }
-        .polaroid-hanging:nth-child(even) { animation-duration: 6s; animation-direction: alternate-reverse;}
-        
-        .polaroid-hanging:hover { transform: scale(1.05) rotate(0deg) !important; box-shadow: 0 25px 45px rgba(0,0,0,0.12); z-index: 10; animation-play-state: paused; }
-        .polaroid-hanging img { width: 100%; height: 240px; object-fit: cover; border-radius: 2px; display: block; filter: brightness(0.98); transition: filter 0.3s; }
-        .polaroid-hanging:hover img { filter: brightness(1.02); }
-        .polaroid-caption { text-align: center; font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #4a403a; margin-top: 12px; }
+    /* ========== 5) POMO DE OURO ========== */
+    #snitch{
+      position: fixed;
+      width: 60px; height: auto;
+      z-index: 9000;
+      cursor: pointer;
+      transition: all 1.2s ease-in-out;
+      display: none;
+      filter: drop-shadow(0 0 10px gold);
+    }
 
-        .wanted-frame { background: #e9dcc9; border: 15px solid #d4b483; padding: 20px 20px 60px 20px; box-shadow: 10px 10px 30px rgba(0,0,0,0.2); position: relative; }
-        .wanted-frame::after { content: 'PROCURADA POR ROUBAR MEU CORAÇÃO'; position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center; font-family: 'Playfair Display', serif; font-weight: 900; color: #5D4037; font-size: 0.8rem; }
+    /* ========== 6) ENTRADA ESTILO NETFLIX (APÓS VARINHA) ========== */
+    #entrance-screen{
+      position: fixed; inset: 0;
+      z-index: 100000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(1200px 600px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
+        linear-gradient(to bottom, #000 0%, #0b0b0b 60%, #000 100%);
+      transition: opacity 1.2s ease;
+      overflow: hidden;
+    }
+    #entrance-screen::before{
+      content:"";
+      position:absolute; inset:-20%;
+      background: radial-gradient(closest-side at 50% 40%, rgba(0,0,0,0), rgba(0,0,0,.85) 75%);
+      pointer-events:none;
+    }
+    #entrance-screen::after{
+      content:"";
+      position:absolute; inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      opacity: .08;
+      mix-blend-mode: overlay;
+      pointer-events:none;
+    }
 
-        .dance-shake { animation: greyShake 0.5s ease-in-out infinite !important; }
-        @keyframes greyShake { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-10px); } }
+    .entrance-wrap{
+      position: relative;
+      z-index: 2;
+      width: min(92vw, 720px);
+      text-align: center;
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+      align-items:center;
+      padding: 24px;
+    }
 
-        /* --- MÚSICA E RODAPÉ --- */
-        .music-section { text-align: center; padding: 60px 20px 80px 20px; background-color: #ffffff; }
-        .music-section h2 { margin-bottom: 10px; font-size: 2rem; color: #8D6E63; font-weight: 400;}
-        .music-wrapper { max-width: 600px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.06); margin-top: 30px;}
-        .music-section iframe { display: block; }
-        footer { text-align: center; padding: 40px 20px; background-color: #111; color: #f1f1f1; }
+    .entrance-logo{
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      color: rgba(255,255,255,.94);
+      letter-spacing: -0.5px;
+      text-shadow: 0 18px 60px rgba(0,0,0,.65);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: introFade .8s ease forwards;
+    }
+    .entrance-sub{
+      font-family: 'Inter', sans-serif;
+      color: rgba(255,255,255,.68);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: .78rem;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: introFade .8s ease forwards;
+      animation-delay: .12s;
+    }
+    .netflix-btn{
+      margin-top: 8px;
+      width: min(360px, 90vw);
+      padding: 14px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(229,9,20,1), rgba(180,0,10,1));
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: .8px;
+      cursor:pointer;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      transition: transform .15s ease, filter .2s ease;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: introFade .8s ease forwards;
+      animation-delay: .22s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .netflix-btn:hover{ transform: translateY(-1px) scale(1.01); filter: brightness(1.04); }
+    .netflix-btn:active{ transform: translateY(1px) scale(.99); }
 
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 3.2rem; }
-            .time-block { min-width: 80px; padding: 15px 10px;}
-            .time-block span { font-size: 1.8rem; }
-            .polaroid-big { max-width: 90%; }
-            .envelope-wrapper { height: 260px; } 
-            .letter-content { font-size: 1.4rem; padding: 25px 20px; }
-            .envelope-wrapper.is-open .letter-content { transform: translateY(-75%); }
-            .polaroid-hanging { width: 220px; padding: 8px 8px 15px 8px;} 
-            .polaroid-hanging img { height: 200px; }
-            .pass-content { padding: 40px 25px;}
-            .post-it { width: 130px; height: 130px; font-size: 1rem; right: -5px; bottom: -20px; }
-        }
+    @keyframes introFade{
+      to{ opacity: 1; transform: translateY(0); }
+    }
 
-        /* ================================
-           PATCH VISUAL PRO (SEM REFACTOR)
-           Adicionado no FINAL do CSS
-        ================================= */
+    /* --- PEGADAS (HARRY POTTER) --- */
+    .footstep{
+      position: absolute;
+      width: 25px; height: 12px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 50% 50% 40% 40%;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      animation: footstepFade 2s forwards;
+    }
+    @keyframes footstepFade{ 0%{opacity:0;} 20%{opacity:.45;} 100%{opacity:0;} }
 
-        /* Erro de senha começa escondido (acabamento) */
-        #pass-error{
-          margin-top: 14px;
-          color: rgba(255,255,255,.75);
-          font-size: .9rem;
-          opacity: 0;
-          transition: opacity .25s ease;
-        }
+    /* --- FLOR MÁGICA (ENROLADOS) --- */
+    #healing-flower{
+      position: fixed;
+      bottom: 20px; right: 20px;
+      width: 60px; height: 60px;
+      cursor: pointer;
+      z-index: 10001;
+      filter: drop-shadow(0 0 10px gold);
+      transition: 0.3s;
+    }
+    .heal-flash{ position: fixed; inset: 0; background: gold; opacity: 0; pointer-events: none; z-index: 200000; }
+    @keyframes healEffect{ 0%{opacity:0;} 50%{opacity:.5;} 100%{opacity:0;} }
 
-        body{
-          text-rendering: optimizeLegibility;
-          -webkit-font-smoothing: antialiased;
-        }
+    /* --- CRACHÁ GREY SLOAN --- */
+    .badge-container { display: flex; justify-content: center; margin: 40px 0; }
+    .grey-badge {
+      width: 320px;
+      background: rgba(20,20,20,.92);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      box-shadow: var(--n-shadow);
+      border-top: 18px solid #1a3a5a;
+      padding: 18px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+    .badge-img {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      border: 4px solid #1a3a5a;
+      object-fit: cover;
+      margin-bottom: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.45);
+      filter: saturate(1.05) contrast(1.02);
+    }
+    .badge-info h4 { color: rgba(255,255,255,.92); margin: 0; font-size: 1.1rem; }
+    .badge-info p { color: #ff5a5f; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; margin-top: 5px; }
 
-        .hero h1{
-          letter-spacing: -0.8px;
-        }
-        .hero p{
-          letter-spacing: 3px;
-          opacity: .88;
-        }
+    /* --- REVEAL E CORAÇÕES --- */
+    .reveal { opacity: 0; transform: translateY(30px); transition: all .9s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .hearts-container { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+    .heart { position: absolute; opacity: 0.30; animation: fall linear forwards; filter: blur(0.8px); }
+    @keyframes fall { 0% { transform: translateY(-10vh) scale(1) rotate(0deg); opacity: 0; } 20% { opacity: 0.45; } 100% { transform: translateY(110vh) scale(1.2) rotate(45deg); opacity: 0; } }
 
-        .hero::after{
-          content:"";
-          position:absolute;
-          inset:0;
-          background:
-            radial-gradient(700px 300px at 50% 35%, rgba(0,0,0,.25), transparent 70%),
-            linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.35));
-          pointer-events:none;
-          z-index:0;
-        }
-        .hero-content{ position: relative; z-index: 1; }
+    /* ========== HERO BILLBOARD (CAPA NETFLIX) ========== */
+    .hero{
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      text-align: left;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+    .hero-bg{
+      position: absolute;
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      background: url('fotocapa.jpeg') center/cover no-repeat;
+      z-index: 0;
+      animation: subtleZoom 25s infinite alternate ease-in-out;
+      filter: saturate(1.08) contrast(1.02);
+    }
+    @keyframes subtleZoom { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
-        .polaroid-big,
-        .time-block,
-        .grey-badge,
-        .polaroid-hanging,
-        .music-wrapper,
-        .pass-content,
-        .envelope,
-        .letter-content,
-        .post-it{
-          border-radius: 16px;
-        }
+    .hero::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.42) 55%, rgba(0,0,0,.05) 100%),
+        radial-gradient(900px 420px at 25% 55%, rgba(0,0,0,.62), transparent 70%);
+      pointer-events:none;
+      z-index:1;
+    }
 
-        .polaroid-big,
-        .polaroid-hanging{
-          box-shadow: 0 18px 60px rgba(0,0,0,.10);
-          border: 1px solid rgba(20,20,20,.08);
-        }
+    .billboard{
+      position: relative;
+      z-index: 2;
+      width: min(92vw, 760px);
+      margin-bottom: 9vh;
+    }
+    .billboard-meta{
+      font-size: .78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.70);
+      margin-bottom: 10px;
+    }
+    .billboard h1{
+      font-size: clamp(2.6rem, 6vw, 4.4rem);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-shadow: 0 18px 60px rgba(0,0,0,.65);
+    }
+    .billboard-desc{
+      max-width: 56ch;
+      font-size: 1rem;
+      color: rgba(255,255,255,.76);
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+    .billboard-actions{ display:flex; gap: 10px; flex-wrap: wrap; }
 
-        .hero-bg{
-          filter: saturate(1.03) contrast(1.02);
-        }
-        .polaroid-big img,
-        .polaroid-hanging img,
-        .badge-img{
-          filter: saturate(1.05) contrast(1.02);
-        }
+    .n-btn{
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 800;
+      letter-spacing: .2px;
+      transition: transform .15s ease, filter .2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .n-btn-play{
+      background: var(--n-red);
+      color: #fff;
+      border-color: rgba(0,0,0,.2);
+    }
+    .n-btn-info{
+      background: rgba(109,109,110,.35);
+      color: #fff;
+    }
+    .n-btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .n-btn:active{ transform: translateY(1px); }
 
-        .grey-badge{
-          border: 1px solid rgba(0,0,0,.10);
-          box-shadow: 0 18px 60px rgba(0,0,0,.10);
-        }
-        .badge-img{
-          box-shadow: 0 10px 30px rgba(0,0,0,.15);
-        }
+    /* --- “BLOCO DESTAQUE” (mantido, só dark) --- */
+    .highlight-section { padding: 64px 20px 26px 20px; display: flex; justify-content: center; }
+    .polaroid-big {
+      background: rgba(20,20,20,.92);
+      padding: 14px 14px 18px 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: var(--n-shadow);
+      border-radius: 14px;
+      max-width: 420px;
+      width: 100%;
+      transform: rotate(-1deg);
+      transition: transform .6s ease, filter .2s ease;
+    }
+    .polaroid-big:hover { transform: rotate(0deg) scale(1.02); filter: brightness(1.03); }
+    .polaroid-big img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      filter: saturate(1.06) contrast(1.03);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .polaroid-text-big {
+      text-align: left;
+      font-family: Inter, sans-serif;
+      font-size: 1rem;
+      color: rgba(255,255,255,.80);
+      margin-top: 12px;
+      line-height: 1.2;
+      letter-spacing: .2px;
+    }
 
-        .pass-btn{
-          border-radius: 14px;
-          box-shadow: 0 14px 40px rgba(0,0,0,.25);
-        }
-        .pass-btn:active{
-          transform: translateY(1px);
-        }
+    /* --- CONTADOR --- */
+    .counter-section { padding: 36px 20px 70px 20px; text-align: center; position: relative; }
+    .ekg-svg { position: absolute; top: 50%; left: 0; width: 100%; height: 80px; transform: translateY(-50%); opacity: 0.07; z-index: 0; pointer-events: none; }
+    .counter-section h2 { font-size: 2rem; margin-bottom: 26px; color: rgba(255,255,255,.86); font-weight: 600; position: relative; z-index: 1;}
+    .counter-box { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; position: relative; z-index: 1;}
+    .time-block {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 18px 16px;
+      border-radius: 14px;
+      min-width: 120px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      transition: transform 0.25s ease, filter .2s ease;
+    }
+    .time-block:hover { transform: translateY(-3px); filter: brightness(1.05); }
+    .time-block span {
+      display: block;
+      font-size: 2.2rem;
+      font-weight: 800;
+      font-family: 'Playfair Display', serif;
+      color: rgba(255,255,255,.92);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .time-block p {
+      margin: 0;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,.62);
+    }
 
-        :focus-visible{
-          outline: 3px solid rgba(218,165,32,.55);
-          outline-offset: 3px;
-          border-radius: 12px;
-        }
+    /* --- DANCE IT OUT button (mantido) --- */
+    .dance-btn{
+      margin-top: 26px;
+      font-size: .9rem;
+      padding: 11px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(109,109,110,.35);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .15s ease, filter .2s ease;
+    }
+    .dance-btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .dance-btn:active{ transform: translateY(1px); }
 
-        @keyframes gentleSwing{
-          0%   { transform: rotate(-0.8deg); }
-          100% { transform: rotate(0.8deg); }
-        }
-        .heart{
-          opacity: .30;
-          filter: blur(0.8px);
-        }
+    /* --- CORUJA / CARTA --- */
+    .story-container { padding: 60px 20px 130px 20px; display: flex; flex-direction: column; align-items: center; position: relative; text-align: center; }
+    .story-container h2 { font-size: 2.3rem; margin-bottom: 6px; color: rgba(255,255,255,.88); font-weight: 700;}
+    .story-container > p { color: rgba(255,255,255,.60); margin-bottom: 22px; font-style: italic; font-size: 1rem; }
 
-        @media (prefers-reduced-motion: reduce){
-          *{
-            animation: none !important;
-            transition: none !important;
-            scroll-behavior: auto !important;
-          }
-          .sparkle{ display:none !important; }
-          .lantern-container{ display:none !important; }
-          .hearts-container{ display:none !important; }
-        }
-    </style>
+    @keyframes owlFlyAndDrop {
+      0% { left: 120%; top: -50px; transform: rotate(-15deg); opacity: 1; }
+      45% { left: 50%; top: 100px; transform: translateX(-50%) rotate(0deg); opacity: 1; }
+      55% { left: 50%; top: 100px; transform: translateX(-50%) rotate(0deg); opacity: 1; }
+      100% { left: -50%; top: -100px; transform: translateX(-50%) rotate(15deg); opacity: 1; }
+    }
+    .owl-flying { animation: owlFlyAndDrop 4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+
+    .envelope-wrapper { position: relative; width: 100%; max-width: 600px; height: 350px; margin-top: 18px; perspective: 1200px; cursor: pointer; transition: transform 0.3s ease; }
+    .envelope-wrapper:hover { transform: scale(1.01); }
+
+    .envelope {
+      position: absolute; width: 100%; height: 100%;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--n-shadow);
+      border-radius: 14px;
+      overflow: hidden;
+      z-index: 2;
+      transition: all 0.8s ease;
+      backdrop-filter: blur(10px);
+    }
+    .envelope-flap { position: absolute; top: 0; left: 0; width: 100%; height: 55%; background: rgba(255,255,255,.08); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform 0.8s ease 0.1s; z-index: 5; }
+    .envelope-seal { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); font-size: 3.2rem; z-index: 6; transition: opacity 0.4s ease 0.1s; color: #DAA520; text-shadow: 0 0 10px rgba(255,215,0,0.45); }
+    .envelope-front { position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: rgba(255,255,255,.06); clip-path: polygon(0 0, 50% 35%, 100% 0, 100% 100%, 0 100%); z-index: 4; }
+    .envelope-to { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: rgba(255,255,255,.85); z-index: 7; }
+
+    .post-it{
+      position:absolute;
+      right:-18px; bottom:-26px;
+      width: 160px; height: 160px;
+      background: rgba(229,9,20,.14);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      padding: 14px;
+      transform: rotate(5deg);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.25rem;
+      color: rgba(255,255,255,.86);
+      display:flex; align-items:center; justify-content:center;
+      text-align:center;
+      opacity: 0;
+      transition: opacity 1s ease 1s;
+      z-index: 15;
+      border-radius: 14px;
+    }
+
+    /* ===== CARTA DOBRADA (paper) + inner text ===== */
+    .letter-content{
+      position: absolute;
+      top: 30%;
+      left: 5%;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 1;
+
+      background: rgba(20,20,20,.92);
+      color: rgba(255,255,255,.88);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      box-shadow: var(--n-shadow);
+
+      padding: 30px 26px;
+      transform-origin: bottom center;
+      backface-visibility: hidden;
+      perspective: 1200px;
+
+      /* começa dobrada */
+      transform: translateY(0) rotateX(85deg) scaleY(0.55);
+      opacity: 0;
+
+      transition:
+        transform 1.15s cubic-bezier(0.2, 0.9, 0.2, 1),
+        opacity .6s ease;
+    }
+
+    .letter-content::before,
+    .letter-content::after{
+      content:"";
+      position:absolute; left:0; right:0;
+      height:1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);
+      opacity: 0;
+      transform: translateZ(1px);
+      pointer-events:none;
+    }
+    .letter-content::before{ top: 33%; }
+    .letter-content::after{ top: 66%; }
+
+    .letter-inner{
+      font-family: 'Caveat', cursive;
+      font-size: 1.55rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      color: rgba(255,255,255,.88);
+    }
+
+    .envelope-wrapper.is-open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+    .envelope-wrapper.is-open .envelope-seal { opacity: 0; }
+
+    .envelope-wrapper.is-open .letter-content{
+      opacity: 1;
+      transform: translateY(-65%) rotateX(0deg) scaleY(1);
+    }
+    .envelope-wrapper.is-open .letter-content::before,
+    .envelope-wrapper.is-open .letter-content::after{
+      opacity: .9;
+      transition: opacity .6s ease .25s;
+    }
+
+    .envelope-wrapper.is-open .post-it{ opacity: 1; }
+
+    .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; color: rgba(229,9,20,.85); }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ===== PENA PNG (escrevendo) ===== */
+    .quill{
+      position: absolute;
+      z-index: 40;
+      right: 22px;
+      top: 155px;
+      width: 56px;
+      height: auto;
+      opacity: 0;
+      transform: rotate(-18deg);
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.45));
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .envelope-wrapper.writing .quill{
+      opacity: 1;
+      animation: quillScribble .22s infinite ease-in-out;
+    }
+    @keyframes quillScribble{
+      0%   { transform: rotate(-18deg) translateY(0); }
+      50%  { transform: rotate(-16deg) translateY(2px); }
+      100% { transform: rotate(-18deg) translateY(0); }
+    }
+
+    /* --- PASCAL --- */
+    #pascal { position: fixed; bottom: 15px; left: 15px; width: 45px; height: 45px; cursor: pointer; z-index: 1000; opacity: 0.6; transition: 0.3s; }
+    #pascal:hover { opacity: 1; transform: scale(1.1) rotate(-10deg); }
+    #pascal-msg { position: fixed; bottom: 70px; left: 20px; background: rgba(20,20,20,.92); padding: 10px 15px; border-radius: 14px; font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: rgba(255,255,255,.86); box-shadow: var(--n-shadow); display: none; z-index: 1001; animation: popUp 0.3s ease-out; border: 1px solid rgba(255,255,255,.10); }
+    @keyframes popUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ========== GALERIA EM RAIL (NETFLIX) ========== */
+    .gallery-section { padding: 30px 0 100px 0; position: relative; overflow: hidden; }
+    .gallery-section::before{ display:none; }
+
+    .section-title{
+      width: min(92vw, 980px);
+      margin: 0 auto 12px auto;
+      padding: 0 20px;
+    }
+    .section-title h2{
+      font-family: Inter, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: .2px;
+      color: rgba(255,255,255,.92);
+      margin-bottom: 4px;
+    }
+    .section-title p{
+      color: rgba(255,255,255,.55);
+      font-size: .85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .varal-container{
+      display: flex;
+      overflow-x: auto;
+      padding: 18px 22px 60px 22px;
+      gap: 14px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .varal-container::-webkit-scrollbar{ display:none; }
+
+    .polaroid-hanging{
+      width: 220px;
+      flex: 0 0 auto;
+      padding: 0;
+      border-radius: 10px;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      margin-top: 0;
+      position: relative;
+      z-index: 2;
+      transition: transform .18s ease;
+      animation: none;
+    }
+    .polaroid-hanging::before{ display:none; }
+
+    .polaroid-hanging img{
+      width: 100%;
+      height: 124px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      transform: translateZ(0);
+      transition: transform .18s ease, filter .18s ease;
+      filter: saturate(1.06) contrast(1.03);
+      display:block;
+    }
+    .polaroid-hanging:hover img{
+      transform: scale(1.12);
+      filter: brightness(1.06);
+    }
+
+    .polaroid-caption{
+      font-family: Inter, sans-serif;
+      font-size: .85rem;
+      color: rgba(255,255,255,.78);
+      margin-top: 8px;
+      text-align: left;
+      padding-left: 2px;
+    }
+
+    /* wanted frame vira “tile especial” */
+    .wanted-frame{
+      padding:0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    .wanted-frame::after{
+      content:"Destaque";
+      position:absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(229,9,20,.92);
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 900;
+      padding: 6px 8px;
+      border-radius: 8px;
+      letter-spacing: .2px;
+    }
+
+    /* --- MÚSICA E RODAPÉ --- */
+    .music-section { text-align: center; padding: 60px 20px 80px 20px; background-color: transparent; }
+    .music-section h2 { margin-bottom: 10px; font-size: 1.8rem; color: rgba(255,255,255,.90); font-weight: 700;}
+    .music-wrapper { max-width: 600px; margin: 0 auto; border-radius: 14px; overflow: hidden; box-shadow: var(--n-shadow); margin-top: 22px; border: 1px solid rgba(255,255,255,.10);}
+    .music-section iframe { display: block; }
+
+    footer { text-align: center; padding: 48px 20px 80px; background-color: #000; color: rgba(255,255,255,.86); border-top: 1px solid rgba(255,255,255,.10); }
+    footer p{ color: rgba(255,255,255,.70); }
+    footer h2{ color: rgba(255,255,255,.92); }
+
+    /* --- DANCE SHAKE --- */
+    .dance-shake { animation: greyShake 0.5s ease-in-out infinite !important; }
+    @keyframes greyShake { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-10px); } }
+
+    /* --- Mobile tweaks --- */
+    @media (max-width: 768px){
+      .time-block{ min-width: 92px; padding: 14px 12px; }
+      .time-block span{ font-size: 1.9rem; }
+      .envelope-wrapper{ height: 260px; }
+      .letter-inner{ font-size: 1.35rem; }
+      .envelope-wrapper.is-open .letter-content{ transform: translateY(-75%) rotateX(0deg) scaleY(1); }
+      .post-it{ width: 130px; height: 130px; font-size: 1rem; right: -5px; bottom: -20px; }
+      .quill{ top: 135px; right: 16px; width: 50px; }
+      .polaroid-hanging{ width: 200px; }
+      .polaroid-hanging img{ height: 118px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .sparkle{ display:none !important; }
+      .lantern-container{ display:none !important; }
+      .hearts-container{ display:none !important; }
+    }
+  </style>
 </head>
+
 <body>
+  <!-- LOGIN (senha) -->
+  <div id="password-screen">
+    <div class="pass-content">
+      <div class="login-brand">WELLINGTONFLIX</div>
+      <h2>Entrar</h2>
+      <p class="helper">Insira a palavra-chave mágica</p>
 
-    <div id="password-screen">
-        <div class="pass-content">
-            <h2>Nosso Segredo</h2>
-            <p style="margin-bottom: 25px; opacity: 0.7; font-size: 0.9rem;">Insira a palavra-chave mágica</p>
-            <input type="text" id="pass-input" class="pass-input" placeholder="Senha..." autocomplete="off">
-            <button id="pass-btn" class="pass-btn">Revelar</button>
-            <p id="pass-error">Feitiço incorreto. Tente novamente.</p>
-        </div>
+      <!-- pode virar password sem mudar lógica (só mascara) -->
+      <input type="password" id="pass-input" class="pass-input" placeholder="Senha..." autocomplete="off" aria-label="Digite a palavra-chave">
+      <button id="pass-btn" class="pass-btn" aria-label="Revelar">Entrar</button>
+
+      <p id="pass-error">Feitiço incorreto. Tente novamente.</p>
+    </div>
+  </div>
+
+  <div class="lantern-container" id="lanterns"></div>
+  <div class="heal-flash" id="heal-flash"></div>
+
+  <!-- VARINHA -->
+  <div id="magic-screen">
+    <div class="wand-container" id="wand-anim">
+      <img src="varinha.png" alt="Varinha Mágica" class="wand-img">
+    </div>
+    <div class="magic-flash" id="magic-flash"></div>
+  </div>
+
+  <!-- Pomo -->
+  <img src="snitch.gif" id="snitch" onclick="catchSnitch()" alt="Pomo de Ouro">
+
+  <!-- Flor -->
+  <div id="healing-flower" onclick="healSite()">
+    <div style="font-size: 40px;">🌸</div>
+  </div>
+
+  <!-- Pascal -->
+  <div id="pascal">
+    <img src="pascal.png" id="pascal-img" alt="Pascal" style="width: 100%;" onerror="this.outerHTML='<div id=\'pascal-emoji\' style=\'font-size: 35px; background: linear-gradient(to right, #740001, #DAA520, #740001); border-radius: 5px; padding: 2px; text-align:center;\'>🦎</div>'">
+  </div>
+  <div id="pascal-msg">Você é a minha maior vitória! 🏆✨</div>
+
+  <!-- ENTRADA -->
+  <div id="entrance-screen">
+    <div class="entrance-wrap">
+      <div class="entrance-logo">3 Anos de Nós</div>
+      <div class="entrance-sub">Escolha continuar</div>
+      <button id="start-btn" class="netflix-btn">ENTRAR</button>
+      <div style="color: rgba(255,255,255,.45); font-size: .75rem;">Toque para começar</div>
+    </div>
+  </div>
+
+  <!-- hearts -->
+  <div class="hearts-container" id="hearts-container"></div>
+
+  <!-- HERO/BILLBOARD -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+
+    <div class="billboard reveal">
+      <div class="billboard-meta">SÉRIE • ROMANCE • 3 TEMPORADAS</div>
+      <h1>3 Anos de Nós</h1>
+      <p class="billboard-desc">Me escolha. Me pegue. Me ame. ❤️</p>
+
+      <div class="billboard-actions">
+        <button class="n-btn n-btn-play" onclick="window.scrollTo({top: document.querySelector('.counter-section').offsetTop, behavior:'smooth'})">▶ Assistir</button>
+        <button class="n-btn n-btn-info" onclick="window.scrollTo({top: document.querySelector('.story-container').offsetTop, behavior:'smooth'})">ℹ Mais informações</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destaque -->
+  <section class="highlight-section reveal">
+    <div class="polaroid-big">
+      <img src="foto2.jpeg" alt="Nossa primeira foto juntos">
+      <div class="polaroid-text-big">Nossa primeira foto juntos</div>
+    </div>
+  </section>
+
+  <!-- Contador -->
+  <section class="counter-section reveal">
+    <svg class="ekg-svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
+      <path d="M0,50 L200,50 L210,40 L220,60 L230,20 L245,85 L255,50 L270,50 L500,50 L510,40 L520,60 L530,10 L545,95 L555,50 L1000,50" stroke="#DAA520" stroke-width="2" fill="none" />
+    </svg>
+
+    <h2>Nosso Tempo Juntos</h2>
+
+    <div class="counter-box" id="counter">
+      <div class="time-block"><span id="days">0</span><p>Dias</p></div>
+      <div class="time-block"><span id="hours">0</span><p>Horas</p></div>
+      <div class="time-block"><span id="minutes">0</span><p>Minutos</p></div>
+      <div class="time-block"><span id="seconds">0</span><p>Segundos</p></div>
     </div>
 
-    <div class="lantern-container" id="lanterns"></div>
-    <div class="heal-flash" id="heal-flash"></div>
+    <button onclick="danceItOut()" class="dance-btn">💃 Dance It Out</button>
+  </section>
 
-    <div id="magic-screen">
-        <div class="wand-container" id="wand-anim">
-            <img src="varinha.png" alt="Varinha Mágica" class="wand-img">
-        </div>
-        <div class="magic-flash" id="magic-flash"></div>
+  <!-- Badge -->
+  <div class="badge-container reveal">
+    <div class="grey-badge">
+      <p style="font-weight: 800; color: rgba(255,255,255,.70); font-size: 0.65rem; margin-bottom: 10px; letter-spacing: 2px;">GREY SLOAN MEMORIAL HOSPITAL</p>
+      <img src="foto8.jpeg" class="badge-img" alt="Flávia">
+      <div class="badge-info">
+        <h4>DRA. FLÁVIA</h4>
+        <p>CHEFE DE CIRURGIA DO MEU CORAÇÃO</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carta -->
+  <section class="story-container reveal">
+    <h2>Uma Carta para Você</h2>
+    <p id="owl-instruction">(Chame a coruja para entregar sua carta)</p>
+
+    <button id="call-owl-btn" class="pass-btn" style="max-width: 260px; margin-bottom: 24px; background: rgba(109,109,110,.35); border: 1px solid rgba(255,255,255,.14);">🦉 Chamar Correio</button>
+
+    <div id="owl-wrapper" style="position: absolute; top: 0; left: 120%; opacity: 0; pointer-events: none; z-index: 50;">
+      <img src="owl.gif" alt="Coruja" style="width: 140px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));"
+           onerror="this.outerHTML='<div style=\'font-size: 80px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.6));\'>🦉</div>'">
+      <div id="owl-letter" style="position: absolute; bottom: -10px; left: 30px; width: 50px; height: 35px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.20); box-shadow: 0 5px 10px rgba(0,0,0,0.45); border-radius: 6px; transition: opacity 0.2s;"></div>
     </div>
 
-    <img src="snitch.gif" id="snitch" onclick="catchSnitch()" alt="Pomo de Ouro">
+    <div class="envelope-wrapper" id="envelope-trigger" style="display: none; opacity: 0; transform: translateY(-50px); transition: all 1.2s ease;">
+      <div class="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-seal">☀️</div>
+        <div class="envelope-front"></div>
+        <div class="envelope-to">Para: Flávia</div>
+      </div>
 
-    <div id="healing-flower" onclick="healSite()">
-        <div style="font-size: 40px;">🌸</div>
+      <div class="post-it">Você é a minha pessoa.<br>Para sempre. 💙</div>
+
+      <!-- PENA PNG -->
+      <img class="quill" id="quill" src="pena.png" alt="" aria-hidden="true">
+
+      <!-- CARTA DOBRADA + TEXTO -->
+      <div class="letter-content" id="letter-paper">
+        <div class="letter-inner typing-cursor" id="typewriter-text"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Galeria estilo Netflix rail -->
+  <section class="gallery-section reveal">
+    <div class="section-title">
+      <h2>Coleção de Memórias</h2>
+      <p>Deslize ➜</p>
     </div>
 
-    <div id="pascal">
-        <img src="pascal.png" id="pascal-img" alt="Pascal" style="width: 100%;" onerror="this.outerHTML='<div id=\'pascal-emoji\' style=\'font-size: 35px; background: linear-gradient(to right, #740001, #DAA520, #740001); border-radius: 5px; padding: 2px; text-align:center;\'>🦎</div>'">
+    <div class="varal-container" id="varal">
+      <div class="polaroid-hanging"><img src="foto1.jpeg" alt="Lembranças"><div class="polaroid-caption">Lembranças</div></div>
+      <div class="polaroid-hanging"><img src="foto4.jpeg" alt="Amo você"><div class="polaroid-caption">Amo você</div></div>
+      <div class="polaroid-hanging"><img src="foto5.jpeg" alt="Nosso dia"><div class="polaroid-caption">Nosso dia</div></div>
+      <div class="polaroid-hanging"><img src="foto6.jpeg" alt="Sempre juntos"><div class="polaroid-caption">Sempre juntos</div></div>
+      <div class="polaroid-hanging"><img src="foto7.jpeg" alt="Meu amor"><div class="polaroid-caption">Meu amor</div></div>
+      <div class="polaroid-hanging wanted-frame"><img src="foto8.jpeg" alt="Destaque"></div>
+      <div class="polaroid-hanging"><img src="foto9.jpeg" alt="Perfeitos"><div class="polaroid-caption">Perfeitos</div></div>
+      <div class="polaroid-hanging"><img src="foto10.jpeg" alt="Momentos únicos"><div class="polaroid-caption">Momentos únicos</div></div>
+      <div class="polaroid-hanging"><img src="foto11.jpeg" alt="Sintonia"><div class="polaroid-caption">Sintonia</div></div>
+      <div class="polaroid-hanging"><img src="foto12.jpeg" alt="Nós dois"><div class="polaroid-caption">Nós dois</div></div>
+      <div class="polaroid-hanging"><img src="foto13.jpeg" alt="Sorrisos"><div class="polaroid-caption">Sorrisos</div></div>
+      <div class="polaroid-hanging"><img src="foto14.jpeg" alt="Meu porto seguro"><div class="polaroid-caption">Meu porto seguro</div></div>
+      <div class="polaroid-hanging"><img src="foto15.jpeg" alt="Cumplicidade"><div class="polaroid-caption">Cumplicidade</div></div>
+      <div class="polaroid-hanging"><img src="foto16.jpeg" alt="Completos"><div class="polaroid-caption">Completos</div></div>
+      <div class="polaroid-hanging"><img src="foto17.jpeg" alt="Para sempre"><div class="polaroid-caption">Para sempre</div></div>
+      <div class="polaroid-hanging"><img src="foto18.jpeg" alt="Meu dengo"><div class="polaroid-caption">Meu dengo</div></div>
+      <div class="polaroid-hanging"><img src="foto19.jpeg" alt="Alegria"><div class="polaroid-caption">Alegria</div></div>
+      <div class="polaroid-hanging"><img src="foto20.jpeg" alt="Nosso mundo"><div class="polaroid-caption">Nosso mundo</div></div>
+      <div class="polaroid-hanging"><img src="foto21.jpeg" alt="Sempre nós"><div class="polaroid-caption">Sempre nós</div></div>
+      <div class="polaroid-hanging"><img src="foto22.jpeg" alt="Tudo pra mim"><div class="polaroid-caption">Tudo pra mim</div></div>
     </div>
-    <div id="pascal-msg">Você é a minha maior vitória! 🏆✨</div>
+  </section>
 
-    <div id="entrance-screen">
-        <p class="entrance-text">Você é a minha pessoa.</p>
-        <button class="pulse-btn" id="start-btn">🤍</button>
-        <p style="color: #666; font-size: 0.8rem; margin-top: 20px; letter-spacing: 2px; text-transform: uppercase;">Toque para entrar</p>
+  <!-- Música -->
+  <section class="music-section reveal">
+    <h2>Nossa Trilha Sonora</h2>
+    <div class="music-wrapper">
+      <iframe id="spotify-player"
+              src="https://open.spotify.com/embed/track/6lXDOj7eP2b6PjE04A2p8O?utm_source=generator"
+              width="100%" height="152" frameborder="0" allowfullscreen=""
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
+  </section>
 
-    <div class="hearts-container" id="hearts-container"></div>
+  <footer>
+    <p>Malfeito feito. ✨</p>
+    <h2 style="font-family: 'Playfair Display', serif; margin-top: 16px; font-style: italic; opacity: 0.9;">"Always."</h2>
+    <p>27 de Fevereiro de 2026</p>
+  </footer>
 
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content reveal">
-            <h1>3 Anos de Nós</h1>
-            <p>Me escolha. Me pegue. Me ame. ❤️</p>
-        </div>
-    </section>
+  <script>
+    // --- PEGADAS MAPA DO MAROTO ---
+    window.addEventListener('scroll', function() {
+      if (Math.random() > 0.96) {
+        const step = document.createElement('div');
+        step.className = 'footstep';
+        step.style.left = Math.random() * 95 + 'vw';
+        step.style.top = window.scrollY + Math.random() * 600 + 'px';
+        step.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(step);
+        setTimeout(() => step.remove(), 2000);
+      }
+    });
 
-    <section class="highlight-section reveal">
-        <div class="polaroid-big">
-            <img src="foto2.jpeg" alt="Nossa primeira foto juntos">
-            <div class="polaroid-text-big">Nossa primeira foto juntos</div>
-        </div>
-    </section>
+    // --- FLOR MÁGICA (ENROLADOS) ---
+    function healSite() {
+      const flash = document.getElementById('heal-flash');
+      flash.style.animation = 'healEffect 1.5s forwards';
+      alert("Brilha linda flor, seu poder venceu... ✨🌸");
+      setTimeout(() => flash.style.animation = '', 1500);
+    }
 
-    <section class="counter-section reveal">
-        <svg class="ekg-svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
-            <path d="M0,50 L200,50 L210,40 L220,60 L230,20 L245,85 L255,50 L270,50 L500,50 L510,40 L520,60 L530,10 L545,95 L555,50 L1000,50" stroke="#DAA520" stroke-width="2" fill="none" />
-        </svg>
-        <h2>Nosso Tempo Juntos</h2>
-        <div class="counter-box" id="counter">
-            <div class="time-block"><span id="days">0</span><p>Dias</p></div>
-            <div class="time-block"><span id="hours">0</span><p>Horas</p></div>
-            <div class="time-block"><span id="minutes">0</span><p>Minutos</p></div>
-            <div class="time-block"><span id="seconds">0</span><p>Segundos</p></div>
-        </div>
-        <button onclick="danceItOut()" class="pass-btn" style="margin-top: 30px; font-size: 0.8rem; padding: 10px 20px; background: #c5e1ef; color: #1a3c5a;">💃 Dance It Out</button>
-    </section>
+    // --- RASTRO MÁGICO ---
+    document.addEventListener('mousemove', function(e) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = e.clientX + 'px';
+      sparkle.style.top = e.clientY + 'px';
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 800);
+    });
 
-    <div class="badge-container reveal">
-        <div class="grey-badge">
-            <p style="font-weight: bold; color: #1a3a5a; font-size: 0.6rem; margin-bottom: 10px;">GREY SLOAN MEMORIAL HOSPITAL</p>
-            <!-- ALTERAÇÃO: foto8 no crachá -->
-            <img src="foto8.jpeg" class="badge-img" alt="Flávia">
-            <div class="badge-info">
-                <h4>DRA. FLÁVIA</h4>
-                <p>CHEFE DE CIRURGIA DO MEU CORAÇÃO</p>
-            </div>
-        </div>
-    </div>
+    // --- POMO DE OURO ---
+    const snitch = document.getElementById('snitch');
+    function moveSnitch() {
+      if(snitch.style.display === 'block') {
+        snitch.style.left = Math.random() * 90 + 'vw';
+        snitch.style.top = Math.random() * 90 + 'vh';
+      }
+    }
+    setInterval(moveSnitch, 1500);
+    function catchSnitch() {
+      alert("Você capturou o Pomo de Ouro e o meu coração! 🏆❤️");
+      snitch.style.display = 'none';
+    }
 
-    <section class="story-container reveal">
-        <h2>Uma Carta para Você</h2>
-        <p id="owl-instruction">(Chame a coruja para entregar sua carta)</p>
-        
-        <button id="call-owl-btn" class="pass-btn" style="max-width: 250px; margin-bottom: 30px; z-index: 10;">🦉 Chamar Correio</button>
-        
-        <div id="owl-wrapper" style="position: absolute; top: 0; left: 120%; opacity: 0; pointer-events: none; z-index: 50;">
-            <img src="owl.gif" alt="Coruja" style="width: 140px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));" onerror="this.outerHTML='<div style=\'font-size: 80px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));\'>🦉</div>'">
-            <div id="owl-letter" style="position: absolute; bottom: -10px; left: 30px; width: 50px; height: 35px; background: #dfd1c6; border: 2px solid #A67B5B; box-shadow: 0 5px 10px rgba(0,0,0,0.2); border-radius: 2px; transition: opacity 0.2s;"></div>
-        </div>
-        
-        <div class="envelope-wrapper" id="envelope-trigger" style="display: none; opacity: 0; transform: translateY(-50px); transition: all 1.5s ease;">
-            <div class="envelope">
-                <div class="envelope-flap"></div>
-                <div class="envelope-seal">☀️</div>
-                <div class="envelope-front"></div>
-                <div class="envelope-to">Para: Flávia</div>
-            </div>
-            <div class="post-it">Você é a minha pessoa.<br>Para sempre. 💙</div>
-            <div class="letter-content typing-cursor" id="typewriter-text"></div>
-        </div>
-    </section>
+    // --- PASCAL ---
+    const pascal = document.getElementById('pascal');
+    const colors = ['hue-rotate(0deg)', 'hue-rotate(90deg)', 'hue-rotate(200deg)', 'hue-rotate(300deg)'];
+    let colorIdx = 0;
+    pascal.onclick = function() {
+      colorIdx = (colorIdx + 1) % colors.length;
+      const target = document.getElementById('pascal-img') || document.getElementById('pascal-emoji');
+      if(target) target.style.filter = colors[colorIdx];
+      document.getElementById('pascal-msg').style.display = 'block';
+      setTimeout(() => { document.getElementById('pascal-msg').style.display = 'none'; }, 3500);
+    };
 
-    <section class="gallery-section reveal">
-        <h2 style="text-align: center; color: #8D6E63; margin-bottom: 5px; font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 400;">Coleção de Memórias</h2>
-        <p class="scroll-hint">Deslize ➔</p>
-        <div class="varal-container" id="varal">
-            <div class="polaroid-hanging"><img src="foto1.jpeg"><div class="polaroid-caption">Lembranças</div></div>
-            <div class="polaroid-hanging"><img src="foto4.jpeg"><div class="polaroid-caption">Amo você</div></div>
-            <div class="polaroid-hanging"><img src="foto5.jpeg"><div class="polaroid-caption">Nosso dia</div></div>
-            <div class="polaroid-hanging"><img src="foto6.jpeg"><div class="polaroid-caption">Sempre juntos</div></div>
-            <div class="polaroid-hanging"><img src="foto7.jpeg"><div class="polaroid-caption">Meu amor</div></div>
-            <div class="polaroid-hanging wanted-frame"><img src="foto8.jpeg"></div>
-            <div class="polaroid-hanging"><img src="foto9.jpeg"><div class="polaroid-caption">Perfeitos</div></div>
-            <div class="polaroid-hanging"><img src="foto10.jpeg"><div class="polaroid-caption">Momentos únicos</div></div>
-            <div class="polaroid-hanging"><img src="foto11.jpeg"><div class="polaroid-caption">Sintonia</div></div>
-            <div class="polaroid-hanging"><img src="foto12.jpeg"><div class="polaroid-caption">Nós dois</div></div>
-            <div class="polaroid-hanging"><img src="foto13.jpeg"><div class="polaroid-caption">Sorrisos</div></div>
-            <div class="polaroid-hanging"><img src="foto14.jpeg"><div class="polaroid-caption">Meu porto seguro</div></div>
-            <div class="polaroid-hanging"><img src="foto15.jpeg"><div class="polaroid-caption">Cumplicidade</div></div>
-            <div class="polaroid-hanging"><img src="foto16.jpeg"><div class="polaroid-caption">Completos</div></div>
-            <div class="polaroid-hanging"><img src="foto17.jpeg"><div class="polaroid-caption">Para sempre</div></div>
-            <div class="polaroid-hanging"><img src="foto18.jpeg"><div class="polaroid-caption">Meu dengo</div></div>
-            <div class="polaroid-hanging"><img src="foto19.jpeg"><div class="polaroid-caption">Alegria</div></div>
-            <div class="polaroid-hanging"><img src="foto20.jpeg"><div class="polaroid-caption">Nosso mundo</div></div>
-            <div class="polaroid-hanging"><img src="foto21.jpeg"><div class="polaroid-caption">Sempre nós</div></div>
-            <div class="polaroid-hanging"><img src="foto22.jpeg"><div class="polaroid-caption">Tudo pra mim</div></div>
-        </div>
-    </section>
+    // --- LANTERNAS ---
+    function createLantern() {
+      const container = document.getElementById('lanterns');
+      const lantern = document.createElement('div');
+      lantern.classList.add('lantern');
+      lantern.style.left = Math.random() * 100 + 'vw';
+      lantern.style.setProperty('--d', (Math.random() * 10 + 12) + 's');
+      container.appendChild(lantern);
+      setTimeout(() => lantern.remove(), 20000);
+    }
+    setInterval(createLantern, 1800);
 
-    <section class="music-section reveal">
-        <h2>Nossa Trilha Sonora</h2>
-        <div class="music-wrapper">
-            <iframe id="spotify-player" src="https://open.spotify.com/embed/track/6lXDOj7eP2b6PjE04A2p8O?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
-    </section>
+    // --- DANCE IT OUT ---
+    function danceItOut() {
+      const photos = document.querySelectorAll('.polaroid-hanging');
+      photos.forEach(p => p.classList.add('dance-shake'));
+      setTimeout(() => photos.forEach(p => p.classList.remove('dance-shake')), 3000);
+    }
 
-    <footer style="padding-bottom: 80px; text-align: center;">
-        <p>Malfeito feito. ✨</p>
-        <h2 style="font-family: 'Playfair Display', serif; color: #DAA520; margin-top: 20px; font-style: italic; opacity: 0.8;">"Always."</h2>
-        <p>27 de Fevereiro de 2026</p>
-    </footer>
+    // --- SENHA E VARINHA ---
+    const passBtn = document.getElementById('pass-btn');
+    const passInput = document.getElementById('pass-input');
+    const passError = document.getElementById('pass-error');
+    const passwordScreen = document.getElementById('password-screen');
+    const magicScreen = document.getElementById('magic-screen');
+    const wandAnim = document.getElementById('wand-anim');
+    const magicFlash = document.getElementById('magic-flash');
+    const entranceScreen = document.getElementById('entrance-screen');
+    const correctPass = "catitel";
 
-    <script>
-        // --- PEGADAS MAPA DO MAROTO ---
-        window.addEventListener('scroll', function() {
-            if (Math.random() > 0.96) {
-                const step = document.createElement('div');
-                step.className = 'footstep';
-                step.style.left = Math.random() * 95 + 'vw';
-                step.style.top = window.scrollY + Math.random() * 600 + 'px';
-                step.style.transform = `rotate(${Math.random() * 360}deg)`;
-                document.body.appendChild(step);
-                setTimeout(() => step.remove(), 2000);
-            }
-        });
+    passBtn.addEventListener('click', checkPassword);
+    passInput.addEventListener('keypress', function(e) { if(e.key === 'Enter') checkPassword(); });
 
-        // --- FLOR MÁGICA (ENROLADOS) ---
-        function healSite() {
-            const flash = document.getElementById('heal-flash');
-            flash.style.animation = 'healEffect 1.5s forwards';
-            alert("Brilha linda flor, seu poder venceu... ✨🌸");
-            setTimeout(() => flash.style.animation = '', 1500);
-        }
+    function checkPassword() {
+      if (passInput.value.toLowerCase().trim() === correctPass) {
+        passwordScreen.style.opacity = '0';
+        setTimeout(() => {
+          passwordScreen.style.display = 'none';
+          magicScreen.style.display = 'flex';
+          wandAnim.classList.add('spell-cast');
+          setTimeout(() => { magicFlash.classList.add('flash-active'); }, 1500);
+          setTimeout(() => {
+            magicScreen.style.display = 'none';
+            entranceScreen.style.display = 'flex';
+            snitch.style.display = 'block';
+          }, 2500);
+        }, 500);
+      } else {
+        passError.style.opacity = '1';
+        passInput.value = '';
+        setTimeout(() => { passError.style.opacity = '0'; }, 2500);
+      }
+    }
 
-        // --- RASTRO MÁGICO ---
-        document.addEventListener('mousemove', function(e) {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            sparkle.style.left = e.clientX + 'px';
-            sparkle.style.top = e.clientY + 'px';
-            document.body.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 800);
-        });
+    document.getElementById('start-btn').addEventListener('click', function() {
+      entranceScreen.style.opacity = '0';
+      setTimeout(() => {
+        entranceScreen.style.display = 'none';
+        document.body.style.overflowY = 'auto';
+        reveal();
+      }, 900);
+    });
 
-        // --- POMO DE OURO ---
-        const snitch = document.getElementById('snitch');
-        function moveSnitch() {
-            if(snitch.style.display === 'block') {
-                snitch.style.left = Math.random() * 90 + 'vw';
-                snitch.style.top = Math.random() * 90 + 'vh';
-            }
-        }
-        setInterval(moveSnitch, 1500);
-        function catchSnitch() {
-            alert("Você capturou o Pomo de Ouro e o meu coração! 🏆❤️");
-            snitch.style.display = 'none';
-        }
+    // --- CORUJA ---
+    const callOwlBtn = document.getElementById('call-owl-btn');
+    const owlWrapper = document.getElementById('owl-wrapper');
+    const owlLetter = document.getElementById('owl-letter');
+    const envelopeTrigger = document.getElementById('envelope-trigger');
+    const owlInstruction = document.getElementById('owl-instruction');
 
-        // --- PASCAL ---
-        const pascal = document.getElementById('pascal');
-        const colors = ['hue-rotate(0deg)', 'hue-rotate(90deg)', 'hue-rotate(200deg)', 'hue-rotate(300deg)'];
-        let colorIdx = 0;
-        pascal.onclick = function() {
-            colorIdx = (colorIdx + 1) % colors.length;
-            const target = document.getElementById('pascal-img') || document.getElementById('pascal-emoji');
-            if(target) target.style.filter = colors[colorIdx];
-            document.getElementById('pascal-msg').style.display = 'block';
-            setTimeout(() => { document.getElementById('pascal-msg').style.display = 'none'; }, 3500);
-        };
+    callOwlBtn.addEventListener('click', function() {
+      this.style.display = 'none';
+      owlInstruction.innerText = "A coruja está trazendo sua carta...";
+      owlWrapper.classList.add('owl-flying');
+      setTimeout(() => {
+        owlLetter.style.opacity = '0';
+        envelopeTrigger.style.display = 'block';
+        setTimeout(() => {
+          envelopeTrigger.style.opacity = '1';
+          envelopeTrigger.style.transform = 'translateY(0)';
+          owlInstruction.innerText = "(Toque no envelope para ler)";
+        }, 50);
+      }, 1900);
+    });
 
-        // --- LANTERNAS ---
-        function createLantern() {
-            const container = document.getElementById('lanterns');
-            const lantern = document.createElement('div');
-            lantern.classList.add('lantern');
-            lantern.style.left = Math.random() * 100 + 'vw';
-            lantern.style.setProperty('--d', (Math.random() * 10 + 12) + 's');
-            container.appendChild(lantern);
-            setTimeout(() => lantern.remove(), 20000);
-        }
-        setInterval(createLantern, 1800);
+    // --- MÁQUINA DE ESCREVER + PENA ---
+    const typewriterText = document.getElementById('typewriter-text');
+    const quill = document.getElementById('quill');
+    const letterPaper = document.getElementById('letter-paper');
 
-        // --- DANCE IT OUT ---
-        function danceItOut() {
-            const photos = document.querySelectorAll('.polaroid-hanging');
-            photos.forEach(p => p.classList.add('dance-shake'));
-            setTimeout(() => photos.forEach(p => p.classList.remove('dance-shake')), 3000);
-        }
+    const letterString =
+`Minha querida Flávia,
 
-        // --- SENHA E VARINHA ---
-        const passBtn = document.getElementById('pass-btn');
-        const passInput = document.getElementById('pass-input');
-        const passError = document.getElementById('pass-error');
-        const passwordScreen = document.getElementById('password-screen');
-        const magicScreen = document.getElementById('magic-screen');
-        const wandAnim = document.getElementById('wand-anim');
-        const magicFlash = document.getElementById('magic-flash');
-        const entranceScreen = document.getElementById('entrance-screen');
-        const correctPass = "catitel";
+Começamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho. Somos o pilar e o porto seguro um do outro, nos apoiando em todos os momentos, incentivando, acreditando e orando para que tudo dê certo em nossas vidas.
 
-        passBtn.addEventListener('click', checkPassword);
-        passInput.addEventListener('keypress', function(e) { if(e.key === 'Enter') checkPassword(); });
+Juntos, somos eu e você, e você e eu (é óbvio, kkk). Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.
 
-        function checkPassword() {
-            if (passInput.value.toLowerCase().trim() === correctPass) {
-                passwordScreen.style.opacity = '0';
-                setTimeout(() => {
-                    passwordScreen.style.display = 'none';
-                    magicScreen.style.display = 'flex';
-                    wandAnim.classList.add('spell-cast');
-                    setTimeout(() => { magicFlash.classList.add('flash-active'); }, 1500);
-                    setTimeout(() => { 
-                        magicScreen.style.display = 'none'; 
-                        entranceScreen.style.display = 'flex'; 
-                        snitch.style.display = 'block';
-                    }, 2500);
-                }, 500);
-            } else {
-                passError.style.opacity = '1';
-                passInput.value = '';
-                setTimeout(() => { passError.style.opacity = '0'; }, 3000);
-            }
-        }
+Saiba que você é a pessoa que pedi a Deus, a pessoa que está comigo desde o início. Quero ter você para sempre em minha vida (mesmo depois da última batida do meu coração e do meu último suspiro). E, se existirem outras vidas, eu te procuro em cada uma delas.
 
-        document.getElementById('start-btn').addEventListener('click', function() {
-            entranceScreen.style.opacity = '0';
-            setTimeout(() => { entranceScreen.style.display = 'none'; document.body.style.overflowY = 'auto'; reveal(); }, 1000);
-        });
+Mas, antes de isso acontecer, quero viver tudo o que há de melhor com você. Afinal, temos 1.096 dias de amor, amizade, companheirismo, fidelidade, respeito e brincadeiras. Quero passar anos e anos ao lado da mulher incrível que você é... Se eu fosse mencionar todas as suas qualidades, passaria horas escrevendo cada detalhe que você tem. Mas eu vejo que a sua maior qualidade é ser você mesma (acho que ficou confuso aqui, risada escandalosa ksksk).
 
-        // --- CORUJA ---
-        const callOwlBtn = document.getElementById('call-owl-btn');
-        const owlWrapper = document.getElementById('owl-wrapper');
-        const owlLetter = document.getElementById('owl-letter');
-        const envelopeTrigger = document.getElementById('envelope-trigger');
-        const owlInstruction = document.getElementById('owl-instruction');
+Então, acho que nesta breve carta consegui expressar o que foram esses 3 anos ao seu lado, a cada dia te amando mais e mais.
 
-        callOwlBtn.addEventListener('click', function() {
-            this.style.display = 'none';
-            owlInstruction.innerText = "A coruja está trazendo sua carta...";
-            owlWrapper.classList.add('owl-flying');
-            setTimeout(() => {
-                owlLetter.style.opacity = '0';
-                envelopeTrigger.style.display = 'block';
-                setTimeout(() => {
-                    envelopeTrigger.style.opacity = '1';
-                    envelopeTrigger.style.transform = 'translateY(0)';
-                    owlInstruction.innerText = "(Toque no envelope para ler)";
-                }, 50);
-            }, 1900);
-        });
+Hoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!
 
-        // --- MÁQUINA DE ESCREVER ---
-        const typewriterText = document.getElementById('typewriter-text');
-        const letterString = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho. Somos o pilar e o porto seguro um do outro, nos apoiando em todos os momentos, incentivando, acreditando e orando para que tudo dê certo em nossas vidas.\n\nJuntos, somos eu e você, e você e eu (é óbvio, kkk). Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.\n\nSaiba que você é a pessoa que pedi a Deus, a pessoa que está comigo desde o início. Quero ter você para sempre em minha vida (mesmo depois da última batida do meu coração e do meu último suspiro). E, se existirem outras vidas, eu te procuro em cada uma delas.\n\nMas, antes de isso acontecer, quero viver tudo o que há de melhor com você. Afinal, temos 1.096 dias de amor, amizade, companheirismo, fidelidade, respeito e brincadeiras. Quero passar anos e anos ao lado da mulher incrível que você é... Se eu fosse mencionar todas as suas qualidades, passaria horas escrevendo cada detalhe que você tem. Mas eu vejo que a sua maior qualidade é ser você mesma (acho que ficou confuso aqui, risada escandalosa ksksk).\n\nEntão, acho que nesta breve carta consegui expressar o que foram esses 3 anos ao seu lado, a cada dia te amando mais e mais.\n\nHoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!\n\nWellington Andrade de Castro.";
-        
-        let isTyping = false;
-        let textIndex = 0;
+Wellington Andrade de Castro.`;
 
-        function typeLetter() {
-            if (textIndex < letterString.length) {
-                typewriterText.innerHTML += letterString.charAt(textIndex);
-                textIndex++;
-                typewriterText.scrollTop = typewriterText.scrollHeight;
-                setTimeout(typeLetter, Math.floor(Math.random() * 50) + 20);
-            } else { typewriterText.classList.remove('typing-cursor'); }
-        }
+    let isTyping = false;
+    let textIndex = 0;
 
-        envelopeTrigger.addEventListener('click', function() {
-            if (!this.classList.contains('is-open')) {
-                this.classList.add('is-open');
-                if (!isTyping) { isTyping = true; setTimeout(typeLetter, 800); }
-            } else { this.classList.remove('is-open'); }
-        });
+    function moveQuillAlongText(){
+      if(!quill || !letterPaper) return;
 
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                if (elementTop < windowHeight - 80) reveals[i].classList.add("active");
-            }
-        }
-        window.addEventListener("scroll", reveal);
+      // aproximação visual: desce conforme o texto cresce
+      const h = typewriterText.scrollHeight;
 
-        const startDate = new Date(2023, 1, 27).getTime(); 
-        setInterval(function() {
-            const now = new Date().getTime();
-            const distance = now - startDate;
-            document.getElementById("days").innerText = Math.floor(distance / 86400000);
-            document.getElementById("hours").innerText = Math.floor((distance % 86400000) / 3600000);
-            document.getElementById("minutes").innerText = Math.floor((distance % 3600000) / 60000);
-            document.getElementById("seconds").innerText = Math.floor((distance % 60000) / 1000);
-        }, 1000);
+      // limites dentro do papel
+      const maxY = Math.max(60, letterPaper.clientHeight - 120);
+      const y = Math.min(maxY, 120 + h * 0.12);
 
-        setInterval(function() {
-            const h = document.createElement('div');
-            h.className = 'heart'; h.innerHTML = '❤️';
-            h.style.left = Math.random() * 100 + 'vw';
-            h.style.animationDuration = (Math.random() * 5 + 8) + 's';
-            document.getElementById('hearts-container').appendChild(h);
-            setTimeout(() => { h.remove(); }, 13000);
-        }, 1200);
+      quill.style.top = y + "px";
+    }
 
-        const slider = document.getElementById('varal');
-        let isDown = false, startX, scrollLeft;
-        slider.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
-        slider.addEventListener('mouseleave', () => isDown = false);
-        slider.addEventListener('mouseup', () => isDown = false);
-        slider.addEventListener('mousemove', (e) => { if (!isDown) return; e.preventDefault(); slider.scrollLeft = scrollLeft - (e.pageX - slider.offsetLeft - startX) * 2; });
-    </script>
+    function typeLetter() {
+      if (textIndex < letterString.length) {
+        typewriterText.innerHTML += letterString.charAt(textIndex);
+        textIndex++;
+        typewriterText.scrollTop = typewriterText.scrollHeight;
+
+        moveQuillAlongText();
+
+        setTimeout(typeLetter, Math.floor(Math.random() * 50) + 20);
+      } else {
+        typewriterText.classList.remove('typing-cursor');
+        envelopeTrigger.classList.remove('writing');
+        if(quill) quill.style.opacity = '0';
+      }
+    }
+
+    // ABRIR AO TOCAR (uma vez) + pena escrevendo
+    envelopeTrigger.addEventListener('click', function() {
+      if (this.classList.contains('is-open')) return; // não fecha mais
+      this.classList.add('is-open');
+      this.classList.add('writing');
+
+      if (!isTyping) {
+        isTyping = true;
+        setTimeout(() => {
+          // posiciona a pena no início antes de começar
+          moveQuillAlongText();
+          typeLetter();
+        }, 800);
+      }
+    });
+
+    // --- reveal ---
+    function reveal() {
+      var reveals = document.querySelectorAll(".reveal");
+      for (var i = 0; i < reveals.length; i++) {
+        var windowHeight = window.innerHeight;
+        var elementTop = reveals[i].getBoundingClientRect().top;
+        if (elementTop < windowHeight - 80) reveals[i].classList.add("active");
+      }
+    }
+    window.addEventListener("scroll", reveal);
+
+    // --- contador ---
+    const startDate = new Date(2023, 1, 27).getTime();
+    setInterval(function() {
+      const now = new Date().getTime();
+      const distance = now - startDate;
+      document.getElementById("days").innerText = Math.floor(distance / 86400000);
+      document.getElementById("hours").innerText = Math.floor((distance % 86400000) / 3600000);
+      document.getElementById("minutes").innerText = Math.floor((distance % 3600000) / 60000);
+      document.getElementById("seconds").innerText = Math.floor((distance % 60000) / 1000);
+    }, 1000);
+
+    // --- hearts ---
+    setInterval(function() {
+      const h = document.createElement('div');
+      h.className = 'heart'; h.innerHTML = '❤️';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDuration = (Math.random() * 5 + 8) + 's';
+      document.getElementById('hearts-container').appendChild(h);
+      setTimeout(() => { h.remove(); }, 13000);
+    }, 1200);
+
+    // --- arraste do rail (mouse) ---
+    const slider = document.getElementById('varal');
+    let isDown = false, startX, scrollLeft;
+    slider.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
+    slider.addEventListener('mouseleave', () => isDown = false);
+    slider.addEventListener('mouseup', () => isDown = false);
+    slider.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      slider.scrollLeft = scrollLeft - (e.pageX - slider.offsetLeft - startX) * 2;
+    });
+  </script>
 </body>
 </html>
