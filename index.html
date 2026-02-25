@@ -109,11 +109,21 @@
         .time-block span { display: block; font-size: 2.8rem; font-weight: 600; font-family: 'Playfair Display', serif; color: #2C3E50; line-height: 1; margin-bottom: 5px;}
         .time-block p { margin: 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #A67B5B; }
 
-        /* --- 3. O ENVELOPE E A CARTA TIPO MÁQUINA DE ESCREVER --- */
-        .story-container { padding: 60px 20px 150px 20px; display: flex; flex-direction: column; align-items: center; }
+        /* --- 4. A CORUJA ENTREGANDO A CARTA --- */
+        .story-container { padding: 60px 20px 150px 20px; display: flex; flex-direction: column; align-items: center; position: relative; }
         .story-container h2 { font-size: 2.5rem; margin-bottom: 5px; color: #8D6E63; font-weight: 400;}
-        .story-container > p { color: #95a5a6; margin-bottom: 40px; font-style: italic; font-size: 1rem; }
+        .story-container > p { color: #95a5a6; margin-bottom: 30px; font-style: italic; font-size: 1rem; text-align: center;}
         
+        /* Animação CSS da Coruja Voando */
+        @keyframes owlFlyAndDrop {
+            0% { left: 120%; top: -50px; transform: rotate(-15deg); opacity: 1; }
+            45% { left: 50%; top: 100px; transform: translateX(-50%) rotate(0deg); opacity: 1; }
+            55% { left: 50%; top: 100px; transform: translateX(-50%) rotate(0deg); opacity: 1; } /* Pausa rápida para soltar a carta */
+            100% { left: -50%; top: -100px; transform: translateX(-50%) rotate(15deg); opacity: 1; }
+        }
+        .owl-flying { animation: owlFlyAndDrop 4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+
+        /* --- 5. O ENVELOPE E A CARTA TIPO MÁQUINA DE ESCREVER --- */
         .envelope-wrapper { position: relative; width: 100%; max-width: 600px; height: 350px; margin-top: 20px; perspective: 1000px; cursor: pointer; transition: transform 0.3s ease; }
         .envelope-wrapper:hover { transform: scale(1.02); }
         
@@ -235,11 +245,19 @@
         </div>
     </section>
 
-    <section class="story-container reveal">
+    <section class="story-container reveal" style="position: relative;">
         <h2>Uma Carta para Você</h2>
-        <p>(Toque no envelope para ler)</p>
+        <p id="owl-instruction">(Chame a coruja para entregar sua carta)</p>
         
-        <div class="envelope-wrapper" id="envelope-trigger">
+        <button id="call-owl-btn" class="pass-btn" style="max-width: 250px; margin-bottom: 30px; z-index: 10;">🦉 Chamar Correio</button>
+        
+        <div id="owl-wrapper" style="position: absolute; top: 0; left: 120%; opacity: 0; pointer-events: none; z-index: 50;">
+            <img src="owl.gif" alt="Coruja" style="width: 140px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));" onerror="this.outerHTML='<div style=\'font-size: 80px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));\'>🦉</div>'">
+            
+            <div id="owl-letter" style="position: absolute; bottom: -10px; left: 30px; width: 50px; height: 35px; background: #dfd1c6; border: 2px solid #A67B5B; box-shadow: 0 5px 10px rgba(0,0,0,0.2); border-radius: 2px; transition: opacity 0.2s;"></div>
+        </div>
+        
+        <div class="envelope-wrapper" id="envelope-trigger" style="display: none; opacity: 0; transform: translateY(-50px); transition: all 1.5s ease;">
             <div class="envelope">
                 <div class="envelope-flap"></div>
                 <div class="envelope-seal">💌</div>
@@ -340,10 +358,35 @@
             }, 1000);
         });
 
-        // --- 3. MÁQUINA DE ESCREVER NA CARTA (TEXTO ORIGINAL) ---
+        // --- 3. A CORUJA ENTREGANDO A CARTA ---
+        const callOwlBtn = document.getElementById('call-owl-btn');
+        const owlWrapper = document.getElementById('owl-wrapper');
+        const owlLetter = document.getElementById('owl-letter');
         const envelopeTrigger = document.getElementById('envelope-trigger');
+        const owlInstruction = document.getElementById('owl-instruction');
+
+        callOwlBtn.addEventListener('click', function() {
+            this.style.display = 'none'; // Esconde o botão
+            owlInstruction.innerText = "A coruja está trazendo sua carta...";
+            owlWrapper.classList.add('owl-flying'); // Dispara animação da coruja
+            
+            // Depois de 1.9s (quando a coruja está no meio da tela), ela solta a carta
+            setTimeout(() => {
+                owlLetter.style.opacity = '0'; // A cartinha da coruja some
+                envelopeTrigger.style.display = 'block'; // O envelope principal entra no HTML
+                
+                // Pequeno delay para o CSS aplicar a transição do envelope descendo
+                setTimeout(() => {
+                    envelopeTrigger.style.opacity = '1';
+                    envelopeTrigger.style.transform = 'translateY(0)';
+                    owlInstruction.innerText = "(Toque no envelope para ler)";
+                }, 50);
+                
+            }, 1900);
+        });
+
+        // --- 4. MÁQUINA DE ESCREVER NA CARTA (TEXTO ORIGINAL) ---
         const typewriterText = document.getElementById('typewriter-text');
-        
         const letterString = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho. Somos o pilar e o porto seguro um do outro, nos apoiando em todos os momentos, incentivando, acreditando e orando para que tudo dê certo em nossas vidas.\n\nJuntos, somos eu e você, e você e eu (é óbvio, kkk). Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.\n\nSaiba que você é a pessoa que pedi a Deus, a pessoa que está comigo desde o início. Quero ter você para sempre em minha vida (mesmo depois da última batida do meu coração e do meu último suspiro). E, se existirem outras vidas, eu te procuro em cada uma delas.\n\nMas, antes de isso acontecer, quero viver tudo o que há de melhor com você. Afinal, temos 1.096 dias de amor, amizade, companheirismo, fidelidade, respeito e brincadeiras. Quero passar anos e anos ao lado da mulher incrível que você é... Se eu fosse mencionar todas as suas qualidades, passaria horas escrevendo cada detalhe que você tem. Mas eu vejo que a sua maior qualidade é ser você mesma (acho que ficou confuso aqui, risada escandalosa ksksk).\n\nEntão, acho que nesta breve carta consegui expressar o que foram esses 3 anos ao seu lado, a cada dia te amando mais e mais.\n\nHoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!\n\nWellington Andrade de Castro.";
         
         let isTyping = false;
@@ -355,7 +398,7 @@
                 textIndex++;
                 typewriterText.scrollTop = typewriterText.scrollHeight;
                 
-                let typingSpeed = Math.floor(Math.random() * 50) + 20; // Digitação um pouco mais rápida
+                let typingSpeed = Math.floor(Math.random() * 50) + 20;
                 setTimeout(typeLetter, typingSpeed);
             } else {
                 typewriterText.classList.remove('typing-cursor');
@@ -370,12 +413,11 @@
                     setTimeout(typeLetter, 800);
                 }
             } else {
-                // Remove esse 'else' inteiro se não quiser que a carta feche ao clicar de novo
                 this.classList.remove('is-open');
             }
         });
 
-        // --- 4. SCROLL REVEAL SUAVE ---
+        // --- 5. SCROLL REVEAL SUAVE ---
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -386,7 +428,7 @@
         }
         window.addEventListener("scroll", reveal);
 
-        // --- 5. CONTADOR COM SEGUNDOS ---
+        // --- 6. CONTADOR COM SEGUNDOS ---
         const startDate = new Date(2023, 1, 27).getTime(); 
         setInterval(function() {
             const now = new Date().getTime();
@@ -397,7 +439,7 @@
             document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000);
         }, 1000);
 
-        // --- 6. CORAÇÕES SUTIS ---
+        // --- 7. CORAÇÕES SUTIS ---
         setInterval(function() {
             const h = document.createElement('div');
             h.className = 'heart'; h.innerHTML = '❤️';
@@ -408,7 +450,7 @@
             setTimeout(() => { h.remove(); }, 13000);
         }, 1200);
 
-        // --- 7. ARRASTAR VARAL ---
+        // --- 8. ARRASTAR VARAL ---
         const slider = document.getElementById('varal');
         let isDown = false, startX, scrollLeft;
         slider.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
