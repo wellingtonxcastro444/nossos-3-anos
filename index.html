@@ -26,10 +26,12 @@
     *{ box-sizing:border-box; margin:0; padding:0; }
     html{ scroll-behavior:smooth; }
     body{
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
       overflow-x:hidden;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
     }
 
     a{ color:inherit; text-decoration:none; }
@@ -367,12 +369,26 @@
       transform: scale(1.12);
       filter: brightness(1.06);
     }
-    .cap{
+
+    /* ===== Legendas com frase romântica ===== */
+    .cap{ padding-left: 2px; }
+    .cap-title{
+      font-weight: 800;
+      font-size: .88rem;
+      color: rgba(255,255,255,.86);
       margin-top: 8px;
-      font-weight: 700;
-      font-size: .86rem;
-      color: rgba(255,255,255,.80);
-      padding-left: 2px;
+    }
+    .cap-love{
+      margin-top: 3px;
+      font-weight: 600;
+      font-size: .78rem;
+      color: rgba(255,255,255,.62);
+      line-height: 1.25;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     /* ========= MODAL (DETALHES) ========= */
@@ -615,9 +631,7 @@
           <div class="title">3 Anos de Nós</div>
 
           <!-- Carta como descrição (estilo Netflix) -->
-          <div class="desc" id="heroDesc">
-            <!-- preenchido pelo JS com um trecho curto da carta -->
-          </div>
+          <div class="desc" id="heroDesc"></div>
 
           <div class="actions">
             <button class="a-btn a-play" id="btnPlay">▶ Assistir</button>
@@ -736,30 +750,32 @@ Hoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!
 
 Wellington Andrade de Castro.`;
 
-    // Catálogo (ajuste títulos como quiser)
+    // Catálogo + frases românticas em cada foto
     const catalog = [
-      { id:"capa", title:"3 Anos de Nós", img:"fotocapa.jpeg", tag:"Filme principal", featured:true },
-      { id:"f1", title:"Lembranças", img:"foto1.jpeg" },
-      { id:"f2", title:"Nossa primeira foto", img:"foto2.jpeg" },
-      { id:"f4", title:"Amo você", img:"foto4.jpeg" },
-      { id:"f5", title:"Nosso dia", img:"foto5.jpeg" },
-      { id:"f6", title:"Sempre juntos", img:"foto6.jpeg" },
-      { id:"f7", title:"Meu amor", img:"foto7.jpeg" },
-      { id:"f8", title:"Destaque", img:"foto8.jpeg", tag:"Destaque" },
-      { id:"f9", title:"Perfeitos", img:"foto9.jpeg" },
-      { id:"f10", title:"Momentos únicos", img:"foto10.jpeg" },
-      { id:"f11", title:"Sintonia", img:"foto11.jpeg" },
-      { id:"f12", title:"Nós dois", img:"foto12.jpeg" },
-      { id:"f13", title:"Sorrisos", img:"foto13.jpeg" },
-      { id:"f14", title:"Meu porto seguro", img:"foto14.jpeg" },
-      { id:"f15", title:"Cumplicidade", img:"foto15.jpeg" },
-      { id:"f16", title:"Completos", img:"foto16.jpeg" },
-      { id:"f17", title:"Para sempre", img:"foto17.jpeg" },
-      { id:"f18", title:"Meu dengo", img:"foto18.jpeg" },
-      { id:"f19", title:"Alegria", img:"foto19.jpeg" },
-      { id:"f20", title:"Nosso mundo", img:"foto20.jpeg" },
-      { id:"f21", title:"Sempre nós", img:"foto21.jpeg" },
-      { id:"f22", title:"Tudo pra mim", img:"foto22.jpeg" },
+      { id:"capa", title:"3 Anos de Nós", img:"fotocapa.jpeg", tag:"Filme principal", featured:true,
+        love:"Você é minha escolha todos os dias." },
+
+      { id:"f1", title:"Lembranças", img:"foto1.jpeg", love:"Onde você está, é casa." },
+      { id:"f2", title:"Nossa primeira foto", img:"foto2.jpeg", love:"Foi aqui que o ‘pra sempre’ começou." },
+      { id:"f4", title:"Amo você", img:"foto4.jpeg", love:"Meu coração te reconhece de longe." },
+      { id:"f5", title:"Nosso dia", img:"foto5.jpeg", love:"Com você, o comum vira extraordinário." },
+      { id:"f6", title:"Sempre juntos", img:"foto6.jpeg", love:"Minha paz tem o seu nome." },
+      { id:"f7", title:"Meu amor", img:"foto7.jpeg", love:"Seu abraço é meu lugar favorito." },
+      { id:"f8", title:"Destaque", img:"foto8.jpeg", tag:"Destaque", love:"Eu te escolheria em todas as vidas." },
+      { id:"f9", title:"Perfeitos", img:"foto9.jpeg", love:"A gente combina até no silêncio." },
+      { id:"f10", title:"Momentos únicos", img:"foto10.jpeg", love:"Cada detalhe com você vale ouro." },
+      { id:"f11", title:"Sintonia", img:"foto11.jpeg", love:"Teu riso é meu som preferido." },
+      { id:"f12", title:"Nós dois", img:"foto12.jpeg", love:"Meu mundo fica melhor com você nele." },
+      { id:"f13", title:"Sorrisos", img:"foto13.jpeg", love:"Se eu sorrio, é porque você existe." },
+      { id:"f14", title:"Meu porto seguro", img:"foto14.jpeg", love:"Em você eu descanso, em você eu fico." },
+      { id:"f15", title:"Cumplicidade", img:"foto15.jpeg", love:"A gente se entende sem legenda." },
+      { id:"f16", title:"Completos", img:"foto16.jpeg", love:"Você é meu melhor ‘sim’." },
+      { id:"f17", title:"Para sempre", img:"foto17.jpeg", love:"Meu futuro tem você em todas as páginas." },
+      { id:"f18", title:"Meu dengo", img:"foto18.jpeg", love:"Seu carinho é meu vício bom." },
+      { id:"f19", title:"Alegria", img:"foto19.jpeg", love:"Você faz a vida parecer leve." },
+      { id:"f20", title:"Nosso mundo", img:"foto20.jpeg", love:"A gente criou um universo só nosso." },
+      { id:"f21", title:"Sempre nós", img:"foto21.jpeg", love:"Se for com você, eu vou." },
+      { id:"f22", title:"Tudo pra mim", img:"foto22.jpeg", love:"Você é minha pessoa. Sempre." },
     ];
 
     // =============================
@@ -827,11 +843,15 @@ Wellington Andrade de Castro.`;
 
     function cardHTML(item){
       const safeTitle = item.title || "Sem título";
+      const love = item.love || "";
       return `
-        <div class="card" data-id="${item.id}" data-title="${safeTitle.toLowerCase()}">
+        <div class="card" data-id="${item.id}" data-title="${(safeTitle + " " + love).toLowerCase()}">
           <img class="thumb" src="${item.img}" alt="${safeTitle}" loading="lazy"
                onerror="this.style.opacity=.3; this.title='Imagem não encontrada: ${item.img}'">
-          <div class="cap">${safeTitle}</div>
+          <div class="cap">
+            <div class="cap-title">${safeTitle}</div>
+            <div class="cap-love">${love}</div>
+          </div>
         </div>
       `;
     }
@@ -841,17 +861,14 @@ Wellington Andrade de Castro.`;
     }
 
     function initApp(){
-      // Hero description = trecho da carta (Netflix style)
       heroDesc.textContent = excerpt(letterString, 220);
 
-      // Rails
       renderRail(railContinue, catalog.filter(x=>x.featured).concat(catalog.slice(1,6)));
       renderRail(railMemories, catalog.filter(x=>!x.featured).slice(0, 18));
       renderRail(railBest, catalog.slice().reverse().slice(0, 14));
 
       renderMyList();
 
-      // Clique nos cards
       document.querySelectorAll(".rail").forEach(rail=>{
         rail.addEventListener("click", (e)=>{
           const card = e.target.closest(".card");
@@ -861,21 +878,17 @@ Wellington Andrade de Castro.`;
         });
       });
 
-      // Busca
       q.addEventListener("input", ()=>{
         const term = q.value.trim().toLowerCase();
         filterCatalog(term);
       });
 
-      // Buttons hero
       btnInfo.addEventListener("click", ()=> openDetails("capa"));
       btnPlay.addEventListener("click", ()=> {
-        // “Assistir” = abre detalhes e já começa a digitar
         openDetails("capa");
         startTyping();
       });
 
-      // Modal
       closeModal.addEventListener("click", closeDetails);
       modal.addEventListener("click", (e)=>{
         if(e.target === modal) closeDetails();
@@ -884,7 +897,6 @@ Wellington Andrade de Castro.`;
         if(e.key === "Escape" && modal.style.display === "flex") closeDetails();
       });
 
-      // Modal actions
       btnInstant.addEventListener("click", showAll);
       btnType.addEventListener("click", startTyping);
       btnFav.addEventListener("click", ()=>{
@@ -893,7 +905,6 @@ Wellington Andrade de Castro.`;
         updateFavButton();
       });
 
-      // Lista toggle
       toggleList.addEventListener("click", ()=>{
         const visible = rowList.style.display !== "none";
         rowList.style.display = visible ? "none" : "block";
@@ -920,19 +931,24 @@ Wellington Andrade de Castro.`;
       modalBg.src = item.img || "fotocapa.jpeg";
       modalTitle.textContent = item.title || "3 Anos de Nós";
 
-      // Reset letter
       stopTyping();
       letterEl.textContent = "";
       letterEl.classList.add("cursor");
       letterWrap.classList.remove("writing");
       if(quill) quill.style.opacity = "";
 
+      // personaliza o bloco "Descrição" com frase romântica da foto clicada
+      const panels = document.querySelectorAll(".panel");
+      if(panels && panels[0]){
+        const loveLine = item.love ? `“${item.love}”` : "";
+        panels[0].querySelector("div:nth-child(2)").textContent =
+          loveLine ? loveLine : "Um catálogo inteiro de memórias… e um filme principal onde a carta diz tudo.";
+      }
+
       modal.style.display = "flex";
       modal.setAttribute("aria-hidden", "false");
 
       updateFavButton();
-
-      // Se clicou no filme principal, já mostra um trechinho inicial
       letterEl.textContent = "";
       idx = 0;
     }
@@ -952,7 +968,6 @@ Wellington Andrade de Castro.`;
 
     function moveQuill(){
       if(!quill) return;
-      // desce conforme texto cresce (aproximação)
       const h = letterEl.scrollHeight;
       const y = Math.min(220, 18 + h * 0.08);
       quill.style.top = y + "px";
@@ -1010,7 +1025,6 @@ Wellington Andrade de Castro.`;
         return;
       }
       railList.innerHTML = items.map(cardHTML).join("");
-      // permitir abrir detalhes na lista também
       railList.onclick = (e)=>{
         const card = e.target.closest(".card");
         if(!card) return;
