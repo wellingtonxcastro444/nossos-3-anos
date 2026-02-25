@@ -44,22 +44,16 @@
             display: none; justify-content: center; align-items: center; overflow: hidden;
         }
         .wand-container {
-            position: absolute; width: 250px; /* Ajuste o tamanho da varinha aqui se precisar */
+            position: absolute; width: 250px; 
             transform: translate(50vw, 50vh) rotate(-30deg) scale(0);
             transform-origin: center;
             opacity: 0;
         }
-        
-        /* Aplica brilho mágico em volta da sua foto */
         .wand-img { 
             width: 100%; height: auto; display: block;
             filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)); 
         }
-        
-        /* Movimento do feitiço */
-        .spell-cast {
-            animation: wandMovement 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
+        .spell-cast { animation: wandMovement 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         @keyframes wandMovement {
             0% { transform: translate(30vw, 80vh) rotate(-60deg) scale(0.5); opacity: 0; }
             30% { transform: translate(0, -20vh) rotate(-10deg) scale(1); opacity: 1; }
@@ -67,7 +61,6 @@
             80% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 1; filter: brightness(1.5); }
             100% { transform: translate(0, 0) rotate(-20deg) scale(1.2); opacity: 0; }
         }
-
         .magic-flash {
             position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; background: #fff; border-radius: 50%;
             box-shadow: 0 0 50px 20px #fff; opacity: 0; transform: translate(-50%, -50%); pointer-events: none;
@@ -347,11 +340,11 @@
             }, 1000);
         });
 
-        // --- 3. MÁQUINA DE ESCREVER NA CARTA ---
+        // --- 3. MÁQUINA DE ESCREVER NA CARTA (TEXTO ORIGINAL) ---
         const envelopeTrigger = document.getElementById('envelope-trigger');
         const typewriterText = document.getElementById('typewriter-text');
         
-        const letterString = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho.\n\nJuntos, somos eu e você. Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.\n\nSaiba que você é a pessoa que pedi a Deus. Quero ter você para sempre em minha vida. Quero passar anos e anos ao lado da mulher incrível que você é.\n\nHoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!\n\nWellington Andrade.";
+        const letterString = "Minha querida Flávia,\n\nComeçamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho. Somos o pilar e o porto seguro um do outro, nos apoiando em todos os momentos, incentivando, acreditando e orando para que tudo dê certo em nossas vidas.\n\nJuntos, somos eu e você, e você e eu (é óbvio, kkk). Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.\n\nSaiba que você é a pessoa que pedi a Deus, a pessoa que está comigo desde o início. Quero ter você para sempre em minha vida (mesmo depois da última batida do meu coração e do meu último suspiro). E, se existirem outras vidas, eu te procuro em cada uma delas.\n\nMas, antes de isso acontecer, quero viver tudo o que há de melhor com você. Afinal, temos 1.096 dias de amor, amizade, companheirismo, fidelidade, respeito e brincadeiras. Quero passar anos e anos ao lado da mulher incrível que você é... Se eu fosse mencionar todas as suas qualidades, passaria horas escrevendo cada detalhe que você tem. Mas eu vejo que a sua maior qualidade é ser você mesma (acho que ficou confuso aqui, risada escandalosa ksksk).\n\nEntão, acho que nesta breve carta consegui expressar o que foram esses 3 anos ao seu lado, a cada dia te amando mais e mais.\n\nHoje eu te amo mais que ontem, e amanhã te amarei mais que hoje. Eu te amo!\n\nWellington Andrade de Castro.";
         
         let isTyping = false;
         let textIndex = 0;
@@ -362,7 +355,7 @@
                 textIndex++;
                 typewriterText.scrollTop = typewriterText.scrollHeight;
                 
-                let typingSpeed = Math.floor(Math.random() * 50) + 30;
+                let typingSpeed = Math.floor(Math.random() * 50) + 20; // Digitação um pouco mais rápida
                 setTimeout(typeLetter, typingSpeed);
             } else {
                 typewriterText.classList.remove('typing-cursor');
@@ -377,6 +370,7 @@
                     setTimeout(typeLetter, 800);
                 }
             } else {
+                // Remove esse 'else' inteiro se não quiser que a carta feche ao clicar de novo
                 this.classList.remove('is-open');
             }
         });
