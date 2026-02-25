@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Anos com Você</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        /* RESET BÁSICO */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9F7F3; /* Creme sofisticado */
+            color: #2C3E50; /* Cinza escuro elegante no lugar do preto puro */
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        /* CAPA (HERO) - Mais imersiva */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.7)), url('fotocapa.jpeg') center/cover no-repeat;
+            color: white;
+            padding: 20px;
+            box-shadow: inset 0 -20px 50px rgba(0,0,0,0.1);
+        }
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            margin-bottom: 15px;
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+            color: #ffffff;
+            letter-spacing: -1px;
+        }
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* CONTADOR - Estilo Glassmorphism / Cartões Modernos */
+        .counter-section {
+            padding: 80px 20px;
+            text-align: center;
+            background-color: #F9F7F3;
+        }
+        .counter-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: #A67B5B; /* Tom de dourado/café elegante */
+        }
+        .counter-box {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .time-block {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 16px;
+            min-width: 120px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: transform 0.3s ease;
+        }
+        .time-block:hover {
+            transform: translateY(-5px);
+        }
+        .time-block span {
+            display: block;
+            font-size: 2.8rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: #2C3E50;
+            line-height: 1.2;
+        }
+        .time-block p {
+            margin-top: 5px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        /* CARTA - Estilo Documento Premium */
+        .story-container {
+            padding: 60px 20px 100px 20px;
+            background-color: #F9F7F3;
+        }
+        .story-card {
+            background: #ffffff;
+            padding: 60px 50px;
+            max-width: 850px;
+            margin: 0 auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border-top: 5px solid #A67B5B;
+        }
+        .story-card h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .story-card p {
+            text-align: justify;
+            margin-bottom: 25px;
+            font-size: 1.15rem;
+            color: #4a4a4a;
+            line-height: 1.9;
+        }
+        .story-card p strong {
+            color: #2C3E50;
+        }
+        /* Assinatura Manuscrita */
+        .signature {
+            text-align: right !important;
+            font-family: 'Dancing Script', cursive !important;
+            font-size: 2.5rem !important;
+            color: #A67B5B !important;
+            margin-top: 50px !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* GALERIA - Grade Profissional e Hover Limpo */
+        .gallery-section {
+            padding: 40px 20px 80px 20px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            background-color: #fff;
+        }
+        .gallery img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.3s ease;
+        }
+        .gallery img:hover {
+            transform: scale(1.08);
+            filter: brightness(1.05);
+        }
+
+        /* MÚSICA */
+        .music-section {
+            text-align: center;
+            padding: 60px 20px 100px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.02);
+        }
+        .music-section h2 {
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        .music-section p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .music-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .music-section iframe {
+            display: block;
+        }
+
+        /* RODAPÉ */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #1a1a1a;
+            color: #f1f1f1;
+        }
+        footer p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        /* Responsividade para celulares */
+        @media (max-width: 768px) {
+            .story-card {
+                padding: 40px 25px;
+            }
+            .time-block {
+                min-width: 100px;
+                padding: 15px 20px;
+            }
+            .time-block span {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>3 Anos de Nós</h1>
+        <p>A melhor decisão que já tomei</p>
+    </section>
+
+    <section class="counter-section">
+        <h2>Nosso Tempo Juntos</h2>
+        <div class="counter-box" id="counter">
+            <div class="time-block"><span id="days">0</span><p>Dias</p></div>
+            <div class="time-block"><span id="hours">0</span><p>Horas</p></div>
+            <div class="time-block"><span id="minutes">0</span><p>Minutos</p></div>
+            <div class="time-block"><span id="seconds">0</span><p>Segundos</p></div>
+        </div>
+    </section>
+
+    <section class="story-container">
+        <div class="story-card">
+            <h2>Nossa História</h2>
+            
+            <p><strong>Para: Flávia.</strong></p>
+            
+            <p>Começamos nossa história há 3 anos (há exatamente 1.096 dias). Nesses dias, vivemos tudo o que há de melhor. É claro que nem tudo são flores; tivemos momentos difíceis em que tivemos que ser fortes. Porém, o nosso amor é maior que qualquer desafio que esteja em nosso caminho. Somos o pilar e o porto seguro um do outro, nos apoiando em todos os momentos, incentivando, acreditando e orando para que tudo dê certo em nossas vidas.</p>
+            
+            <p>Juntos, somos eu e você, e você e eu (é óbvio, kkk). Já temos nossa família: nós dois e nossas filhas pets, Safira e Bela, que são nossas crianças que tanto amamos. E claro que, em um futuro não tão distante, teremos nossos filhos, como sempre falamos.</p>
+            
+            <p>Saiba que você é a pessoa que pedi a Deus, a pessoa que está comigo desde o início. Quero ter você para sempre em minha vida (mesmo depois da última batida do meu coração e do meu último suspiro). E, se existirem outras vidas, eu te procuro em cada uma delas.</p>
+            
+            <p>Mas, antes de isso acontecer, quero viver tudo o que há de melhor com você. Afinal, temos 1.096 dias de amor, amizade, companheirismo, fidelidade, respeito e brincadeiras. Quero passar anos e anos ao lado da mulher incrível que você é... Se eu fosse mencionar todas as suas qualidades, passaria horas escrevendo cada detalhe que você tem. Mas eu vejo que a sua maior qualidade é ser você mesma (acho que ficou confuso aqui, <em>risada escandalosa ksksk</em>).</p>
+            
+            <p>Então, acho que nesta breve carta consegui expressar o que foram esses 3 anos ao seu lado, a cada dia te amando mais e mais.</p>
+            
+            <p style="text-align: center; margin-top: 40px;"><strong>HOJE EU TE AMO MAIS QUE ONTEM, E AMANHÃ TE AMAREI MAIS QUE HOJE.</strong></p>
+            
+            <p style="text-align: center;"><strong>EU TE AMO!</strong></p>
+            
+            <p class="signature">Wellington Andrade de Castro.</p>
+        </div>
+    </section>
+
+    <section class="gallery-section">
+        <div class="gallery">
+            <div class="gallery-item"><img src="foto1.jpeg" alt="Nossa Foto 1"></div>
+            <div class="gallery-item"><img src="foto2.jpeg" alt="Nossa Foto 2"></div>
+            <div class="gallery-item"><img src="foto4.jpeg" alt="Nossa Foto 4"></div>
+            <div class="gallery-item"><img src="foto5.jpeg" alt="Nossa Foto 5"></div>
+            <div class="gallery-item"><img src="foto6.jpeg" alt="Nossa Foto 6"></div>
+            <div class="gallery-item"><img src="foto7.jpeg" alt="Nossa Foto 7"></div>
+            <div class="gallery-item"><img src="foto8.jpeg" alt="Nossa Foto 8"></div>
+            <div class="gallery-item"><img src="foto9.jpeg" alt="Nossa Foto 9"></div>
+        </div>
+    </section>
+
+    <section class="music-section">
+        <h2>Nossa Trilha Sonora</h2>
+        <p>Dê o play para finalizar a leitura :)</p>
+        <div class="music-wrapper">
+            <iframe src="Https://open.spotify.com/track/0GBsYdxpAPsOd6H8QzGCCU?si=pe55REEYSWCCkGILH-euMw" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+    </section>
+
+    <footer>
+        <p>Com todo o meu amor, para sempre.</p>
+        <p>27 de Fevereiro de 2026</p>
+    </footer>
+
+    <script>
+        const startDate = new Date(2023, 1, 27).getTime();
+
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = now - startDate;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days;
+            document.getElementById("hours").innerText = hours;
+            document.getElementById("minutes").innerText = minutes;
+            document.getElementById("seconds").innerText = seconds;
+        }, 1000);
+    </script>
+</body>
+</html>
